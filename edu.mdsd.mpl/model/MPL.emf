@@ -1,0 +1,51 @@
+@namespace(uri="http://mdsd.edu/mpl/1.0", prefix="mpl")
+package mpl;
+
+class Program {
+  attr String[1] name;
+  val VariableDeclaration[*] variableDeclarations;
+  val Statement[*] statements;
+}
+
+class VariableDeclaration {
+  val Variable[1] variable;
+}
+
+class Variable {
+  attr String[1] name;
+}
+
+abstract class Statement {
+}
+
+class Assignment extends Statement {
+  val VariableReference[1] leftHandSide;
+  val Expression[1] rightHandSide;
+}
+
+class ExpressionStatement extends Statement {
+  val Expression[1] expression;
+}
+
+abstract class Expression {
+}
+
+abstract class AtomicExpression extends Expression {
+}
+
+class LiteralValue extends AtomicExpression {
+  attr int[1] rawValue;
+}
+
+class VariableReference extends AtomicExpression {
+  ref Variable[1] variable;
+}
+
+abstract class ArithmeticExpression extends Expression {
+  val Expression[1] operand1;
+  val Expression[1] operand2;
+}
+
+class AddExpression extends ArithmeticExpression {
+}
+
