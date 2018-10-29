@@ -117,3 +117,4 @@ tags
 
 
 # End of https://www.gitignore.io/api/vim,java,eclipse
+/org.emftext.commons.antlr3_4_0/
