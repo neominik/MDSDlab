@@ -24,7 +24,7 @@ TOKENSTYLES {
 RULES {
 	Program ::= "Program" #1 name[] (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)+ ".")? (!1 statements)* "End" ".";
 	
-	VariableDeclaration ::= variable;
+	VariableDeclaration ::= variable (":=" initialValue)?;
 	Variable ::= name[];
 	
 	@Operator(type="primitive", weight="5", superclass="Expression")
@@ -35,6 +35,21 @@ RULES {
 	
 	@Operator(type="binary_left_associative", weight="1", superclass="Expression")
 	AddExpression ::= operand1 #1 "+" #1 operand2;
+	
+	@Operator(type="binary_left_associative", weight="1", superclass="Expression")
+	SubtractExpression ::= operand1 #1 "-" #1 operand2;
+	
+	@Operator(type="binary_left_associative", weight="2", superclass="Expression")
+	MultiplyExpression ::= operand1 #1 "*" #1 operand2;
+	
+	@Operator(type="binary_left_associative", weight="2", superclass="Expression")
+	DivisionExpression ::= operand1 #1 "/" #1 operand2;
+	
+	@Operator(type="unary_prefix", weight="4", superclass="Expression")
+	NegateExpression ::= "-" operand;
+	
+	@Operator(type="primitive", weight="5", superclass="Expression")
+	ParenExpression ::= "(" operand ")";
 	
 	Assignment ::= leftHandSide #1 ":=" #1 rightHandSide ".";
 	
