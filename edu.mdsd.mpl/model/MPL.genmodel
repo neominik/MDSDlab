@@ -15,6 +15,7 @@
     </genClasses>
     <genClasses ecoreClass="MPL.ecore#//VariableDeclaration">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//VariableDeclaration/variable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//VariableDeclaration/initialValue"/>
     </genClasses>
     <genClasses ecoreClass="MPL.ecore#//Variable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MPL.ecore#//Variable/name"/>
@@ -40,5 +41,13 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//ArithmeticExpression/operand2"/>
     </genClasses>
     <genClasses ecoreClass="MPL.ecore#//AddExpression"/>
+    <genClasses ecoreClass="MPL.ecore#//SubtractExpression"/>
+    <genClasses ecoreClass="MPL.ecore#//MultiplyExpression"/>
+    <genClasses ecoreClass="MPL.ecore#//DivisionExpression"/>
+    <genClasses image="false" ecoreClass="MPL.ecore#//UnaryExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//UnaryExpression/operand"/>
+    </genClasses>
+    <genClasses ecoreClass="MPL.ecore#//NegateExpression"/>
+    <genClasses ecoreClass="MPL.ecore#//ParenExpression"/>
   </genPackages>
 </genmodel:GenModel>

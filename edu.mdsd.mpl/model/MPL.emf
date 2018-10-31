@@ -9,6 +9,7 @@ class Program {
 
 class VariableDeclaration {
   val Variable[1] variable;
+  val Expression initialValue;
 }
 
 class Variable {
@@ -49,3 +50,21 @@ abstract class ArithmeticExpression extends Expression {
 class AddExpression extends ArithmeticExpression {
 }
 
+class SubtractExpression extends ArithmeticExpression {
+}
+
+class MultiplyExpression extends ArithmeticExpression {
+}
+
+class DivisionExpression extends ArithmeticExpression {
+}
+
+abstract class UnaryExpression extends Expression {
+	val Expression[1] operand;
+}
+
+class NegateExpression extends UnaryExpression {
+}
+
+class ParenExpression extends UnaryExpression {
+}
