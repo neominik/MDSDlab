@@ -59,4 +59,27 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NegateExpression" eSuperTypes="#//UnaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParenExpression" eSuperTypes="#//UnaryExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Comparison">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftHandSide" lowerBound="1"
+        eType="#//Expression" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operator" lowerBound="1"
+        eType="#//ComparisonOperator" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightHandSide" lowerBound="1"
+        eType="#//Expression" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComparisonOperator" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EQ" eSuperTypes="#//ComparisonOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NE" eSuperTypes="#//ComparisonOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GT" eSuperTypes="#//ComparisonOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LT" eSuperTypes="#//ComparisonOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GE" eSuperTypes="#//ComparisonOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LE" eSuperTypes="#//ComparisonOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="If" eSuperTypes="#//Statement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" lowerBound="1"
+        eType="#//Comparison" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="then" lowerBound="1" eType="#//Block"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="else" eType="#//Block"
+        containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>

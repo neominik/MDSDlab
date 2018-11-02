@@ -56,4 +56,14 @@ RULES {
 	Assignment ::= leftHandSide #1 ":=" #1 rightHandSide ".";
 	
 	ExpressionStatement ::= expression ".";
+	
+	If ::= "If" condition !1 "Then" then (!1 "Else" else)? !1 "End" ".";
+	
+	Comparison ::= "(" leftHandSide operator rightHandSide ")";
+	EQ ::= "=";
+	NE ::= "<>";
+	GT ::= ">";
+	LT ::= "<";
+	GE ::= ">=";
+	LE ::= "<=";
 }

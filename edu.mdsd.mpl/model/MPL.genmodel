@@ -52,5 +52,22 @@
     </genClasses>
     <genClasses ecoreClass="MPL.ecore#//NegateExpression"/>
     <genClasses ecoreClass="MPL.ecore#//ParenExpression"/>
+    <genClasses ecoreClass="MPL.ecore#//Comparison">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Comparison/leftHandSide"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Comparison/operator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Comparison/rightHandSide"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="MPL.ecore#//ComparisonOperator"/>
+    <genClasses ecoreClass="MPL.ecore#//EQ"/>
+    <genClasses ecoreClass="MPL.ecore#//NE"/>
+    <genClasses ecoreClass="MPL.ecore#//GT"/>
+    <genClasses ecoreClass="MPL.ecore#//LT"/>
+    <genClasses ecoreClass="MPL.ecore#//GE"/>
+    <genClasses ecoreClass="MPL.ecore#//LE"/>
+    <genClasses ecoreClass="MPL.ecore#//If">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//If/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//If/then"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//If/else"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

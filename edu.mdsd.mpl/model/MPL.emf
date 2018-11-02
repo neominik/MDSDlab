@@ -13,7 +13,7 @@ class VariableDeclaration {
 }
 
 class Block {
-	val Statement[*] statements;
+  val Statement[*] statements;
 }
 
 class Variable {
@@ -64,7 +64,7 @@ class DivisionExpression extends ArithmeticExpression {
 }
 
 abstract class UnaryExpression extends Expression {
-	val Expression[1] operand;
+  val Expression[1] operand;
 }
 
 class NegateExpression extends UnaryExpression {
@@ -72,3 +72,37 @@ class NegateExpression extends UnaryExpression {
 
 class ParenExpression extends UnaryExpression {
 }
+
+class Comparison {
+  val Expression[1] leftHandSide;
+  val ComparisonOperator[1] operator;
+  val Expression[1] rightHandSide;
+}
+
+abstract class ComparisonOperator {
+}
+
+class EQ extends ComparisonOperator {
+}
+
+class NE extends ComparisonOperator {
+}
+
+class GT extends ComparisonOperator {
+}
+
+class LT extends ComparisonOperator {
+}
+
+class GE extends ComparisonOperator {
+}
+
+class LE extends ComparisonOperator {
+}
+
+class If extends Statement {
+  val Comparison[1] condition;
+  val Block[1] then;
+  val Block else;
+}
+
