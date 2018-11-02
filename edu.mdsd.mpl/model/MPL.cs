@@ -5,6 +5,7 @@ START Program
 OPTIONS {
 	reloadGeneratorModel = "true";
 	defaultTokenName = "IDENTIFIER_TOKEN";
+	usePredefinedTokens = "false";
 }
 
 TOKENS {
@@ -28,6 +29,7 @@ RULES {
 	Variable ::= name[];
 	
 	Block ::= (!1 statements)*;
+	Statement ::= form ".";
 	
 	@Operator(type="primitive", weight="5", superclass="Expression")
 	VariableReference ::= variable[];
@@ -53,13 +55,15 @@ RULES {
 	@Operator(type="primitive", weight="5", superclass="Expression")
 	ParenExpression ::= "(" operand ")";
 	
-	Assignment ::= leftHandSide #1 ":=" #1 rightHandSide ".";
+	Assignment ::= leftHandSide #1 ":=" #1 rightHandSide;
 	
-	ExpressionStatement ::= expression ".";
+	ExpressionStatement ::= expression;
 	
-	If ::= "If" condition #1 "Then" !1 then ("Else" !1 else)? "End" ".";
+	If ::= "If" condition #1 "Then" !1 then ("Else" !1 else)? "End";
 	
-	While ::= "While" condition "Do" !1 body "End" ".";
+	While ::= "While" condition "Do" !1 body "End";
+	
+	For ::= "For" from downwards["Down" : ""] "To" to "Do" body "End";
 		
 	Comparison ::= "(" leftHandSide operator rightHandSide ")";
 	EQ ::= "=";

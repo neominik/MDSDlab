@@ -20,15 +20,19 @@ class Variable {
   attr String[1] name;
 }
 
-abstract class Statement {
+class Statement {
+  val Form[1] form;
 }
 
-class Assignment extends Statement {
+abstract class Form {
+}
+
+class Assignment extends Form {
   val VariableReference[1] leftHandSide;
   val Expression[1] rightHandSide;
 }
 
-class ExpressionStatement extends Statement {
+class ExpressionStatement extends Form {
   val Expression[1] expression;
 }
 
@@ -100,14 +104,23 @@ class GE extends ComparisonOperator {
 class LE extends ComparisonOperator {
 }
 
-class If extends Statement {
+class If extends Form {
   val Comparison[1] condition;
   val Block[1] then;
   val Block else;
 }
 
-class While extends Statement {
-  val Comparison[1] condition;
+abstract class Loop extends Form {
   val Block[1] body;
+}
+
+class While extends Loop {
+  val Comparison[1] condition;
+}
+
+class For extends Loop {
+  val Assignment[1] from;
+  attr Boolean[1] downwards;
+  val LiteralValue[1] to;
 }
 

@@ -23,7 +23,10 @@
     <genClasses ecoreClass="MPL.ecore#//Variable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MPL.ecore#//Variable/name"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="MPL.ecore#//Statement"/>
+    <genClasses image="false" ecoreClass="MPL.ecore#//Statement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Statement/form"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="MPL.ecore#//Form"/>
     <genClasses ecoreClass="MPL.ecore#//Assignment">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Assignment/leftHandSide"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Assignment/rightHandSide"/>
@@ -69,9 +72,16 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//If/then"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//If/else"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="MPL.ecore#//Loop">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Loop/body"/>
+    </genClasses>
     <genClasses ecoreClass="MPL.ecore#//While">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//While/condition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//While/body"/>
+    </genClasses>
+    <genClasses ecoreClass="MPL.ecore#//For">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//For/from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MPL.ecore#//For/downwards"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//For/to"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
