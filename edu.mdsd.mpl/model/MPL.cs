@@ -22,10 +22,12 @@ TOKENSTYLES {
 }
 
 RULES {
-	Program ::= "Program" #1 name[] (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)+ ".")? (!1 statements)* "End" ".";
+	Program ::= "Program" #1 name[] (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)+ ".")? (body)? "End" ".";
 	
 	VariableDeclaration ::= variable (":=" initialValue)?;
 	Variable ::= name[];
+	
+	Block ::= (!1 statements)*;
 	
 	@Operator(type="primitive", weight="5", superclass="Expression")
 	VariableReference ::= variable[];

@@ -11,11 +11,14 @@
     <genClasses ecoreClass="MPL.ecore#//Program">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MPL.ecore#//Program/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Program/variableDeclarations"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Program/statements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Program/body"/>
     </genClasses>
     <genClasses ecoreClass="MPL.ecore#//VariableDeclaration">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//VariableDeclaration/variable"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//VariableDeclaration/initialValue"/>
+    </genClasses>
+    <genClasses ecoreClass="MPL.ecore#//Block">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//Block/statements"/>
     </genClasses>
     <genClasses ecoreClass="MPL.ecore#//Variable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MPL.ecore#//Variable/name"/>

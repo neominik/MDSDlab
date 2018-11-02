@@ -4,12 +4,16 @@ package mpl;
 class Program {
   attr String[1] name;
   val VariableDeclaration[*] variableDeclarations;
-  val Statement[*] statements;
+  val Block body;
 }
 
 class VariableDeclaration {
   val Variable[1] variable;
   val Expression initialValue;
+}
+
+class Block {
+	val Statement[*] statements;
 }
 
 class Variable {
