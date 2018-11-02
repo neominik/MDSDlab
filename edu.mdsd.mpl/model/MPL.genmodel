@@ -69,5 +69,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//If/then"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//If/else"/>
     </genClasses>
+    <genClasses ecoreClass="MPL.ecore#//While">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//While/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//While/body"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -106,3 +106,8 @@ class If extends Statement {
   val Block else;
 }
 
+class While extends Statement {
+  val Comparison[1] condition;
+  val Block[1] body;
+}
+

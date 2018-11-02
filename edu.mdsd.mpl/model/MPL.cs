@@ -57,8 +57,10 @@ RULES {
 	
 	ExpressionStatement ::= expression ".";
 	
-	If ::= "If" condition !1 "Then" then (!1 "Else" else)? !1 "End" ".";
+	If ::= "If" condition #1 "Then" !1 then ("Else" !1 else)? "End" ".";
 	
+	While ::= "While" condition "Do" !1 body "End" ".";
+		
 	Comparison ::= "(" leftHandSide operator rightHandSide ")";
 	EQ ::= "=";
 	NE ::= "<>";
