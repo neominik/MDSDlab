@@ -14,6 +14,9 @@ TOKENS {
 	
 	DEFINE SL_COMMENT $'//'(~('\n'|'\r'|'\uffff'))*$;
 	DEFINE ML_COMMENT $'/*'.*'*/'$;
+	
+	DEFINE LINEBREAK $('\r\n'|'\r'|'\n')$;
+	DEFINE WHITESPACE $(' '|'\t'|'\f')$;
 }
 
 TOKENSTYLES {
