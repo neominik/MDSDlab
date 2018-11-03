@@ -121,6 +121,6 @@ class While extends Loop {
 class For extends Loop {
   val Assignment[1] from;
   attr Boolean[1] downwards;
-  val LiteralValue[1] to;
+  val Expression[1] to;
 }
 
