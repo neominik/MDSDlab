@@ -54,10 +54,26 @@
                   severity="ERROR"
                   statusCode="1">
                <message>
-                  The variable"{0}" must have been declared before.
+                  The variable &quot;{0}&quot; must have been declared before.
                </message>
                <target
                      class="VariableReference">
+               </target>
+            </constraint>
+            <constraint
+                  class="edu.mdsd.mpl.validation.ForDirectionIsValidConstraint"
+                  id="edu.mdsd.mpl.validation.ForDirectionIsValidConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="ForDirectionIsValidConstraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  The order seems to be {0}. {1} &quot;Down&quot;.
+               </message>
+               <target
+                     class="For">
                </target>
             </constraint>
          </constraints>
