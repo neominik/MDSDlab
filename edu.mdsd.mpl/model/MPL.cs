@@ -42,6 +42,8 @@ RULES {
 	
 	Return ::= "Return" (value)?;
 	
+	TraceCall ::= "Trace" "(" variable ")";
+	
 	@Operator(type="primitive", weight="5", superclass="Expression")
 	OperationExpression ::= operation[] "(" (parameterValues ("," parameterValues)*)? ")";
 	

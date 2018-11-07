@@ -125,4 +125,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameterValues" upperBound="-1"
         eType="#//Expression" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceCall" eSuperTypes="#//Form">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variable" lowerBound="1"
+        eType="#//VariableReference" containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>

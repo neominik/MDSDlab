@@ -100,5 +100,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MPL.ecore#//OperationExpression/operation"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//OperationExpression/parameterValues"/>
     </genClasses>
+    <genClasses ecoreClass="MPL.ecore#//TraceCall">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MPL.ecore#//TraceCall/variable"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

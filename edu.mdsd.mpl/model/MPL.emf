@@ -151,3 +151,7 @@ class OperationExpression extends Expression {
   val Expression[*] parameterValues;
 }
 
+class TraceCall extends Form {
+  val VariableReference[1] variable;
+}
+
