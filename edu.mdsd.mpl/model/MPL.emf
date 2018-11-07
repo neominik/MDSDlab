@@ -1,10 +1,18 @@
 @namespace(uri="http://mdsd.edu/mpl/1.0", prefix="mpl")
 package mpl;
 
-class Program {
+class MPLModel {
+  val Program[1] program;
+  val Operation[*] operations;
+}
+
+abstract class FunctionalUnit {
   attr String[1] name;
   val VariableDeclaration[*] variableDeclarations;
   val Block body;
+}
+
+class Program extends FunctionalUnit {
 }
 
 class VariableDeclaration {
@@ -122,5 +130,24 @@ class For extends Loop {
   val Assignment[1] from;
   attr Boolean[1] downwards;
   val Expression[1] to;
+}
+
+abstract class Operation extends FunctionalUnit {
+  val Variable[*] parameters;
+}
+
+class Function extends Operation {
+}
+
+class Procedure extends Operation {
+}
+
+class Return extends Form {
+  val Expression value;
+}
+
+class OperationExpression extends Expression {
+  ref Operation[1] operation;
+  val Expression[*] parameterValues;
 }
 

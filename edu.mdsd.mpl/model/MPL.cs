@@ -1,6 +1,6 @@
 SYNTAXDEF mpl
 FOR <http://mdsd.edu/mpl/1.0>
-START Program
+START MPLModel
 
 OPTIONS {
 	reloadGeneratorModel = "true";
@@ -26,13 +26,24 @@ TOKENSTYLES {
 }
 
 RULES {
-	Program ::= "Program" #1 name[] (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)+ ".")? (body)? "End" ".";
+	MPLModel ::= program (operations)*;
+	
+	Program ::= "Program" #1 name[] (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? (body)? "End" ".";
 	
 	VariableDeclaration ::= variable (":=" initialValue)?;
 	Variable ::= name[];
 	
 	Block ::= (!1 statements)*;
 	Statement ::= form ".";
+	
+	Function ::= "Function" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? (body)? "End" ".";
+	
+	Procedure ::= "Procedure" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? (body)? "End" ".";
+	
+	Return ::= "Return" (value)?;
+	
+	@Operator(type="primitive", weight="5", superclass="Expression")
+	OperationExpression ::= operation[] "(" (parameterValues ("," parameterValues)*)? ")";
 	
 	@Operator(type="primitive", weight="5", superclass="Expression")
 	VariableReference ::= variable[];
