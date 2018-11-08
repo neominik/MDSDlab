@@ -1,5 +1,8 @@
 package edu.mdsd.mpl.validation;
 
+import static edu.mdsd.mpl.validation.ConstraintHelper.filter;
+import static edu.mdsd.mpl.validation.ConstraintHelper.parentClosure;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,18 +38,9 @@ public class VariableMustHaveBeenDeclaredConstraint extends AbstractModelConstra
 		}).orElseGet(() -> ctx.createSuccessStatus());
 	}
 
-	private Stream<EObject> parentClosure(VariableReference varRef) {
-		return Stream.iterate(varRef, eo -> eo.eContainer() != null, EObject::eContainer);
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T> Stream<T> filter(Stream<? super T> s, Class<T> clazz) {
-		return s.filter(clazz::isInstance).map(o -> (T) o);
-	}
-
 	private List<Variable> getDeclaredVariableList(VariableDeclaration varDecl) {
-		return ((Program) varDecl.eContainer()).getVariableDeclarations().stream()
-				.map(VariableDeclaration::getVariable).collect(Collectors.toList());
+		return ((Program) varDecl.eContainer()).getVariableDeclarations().stream().map(VariableDeclaration::getVariable)
+				.collect(Collectors.toList());
 	}
 
 }
