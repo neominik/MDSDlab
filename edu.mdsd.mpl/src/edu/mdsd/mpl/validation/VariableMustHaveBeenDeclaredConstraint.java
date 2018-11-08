@@ -1,6 +1,8 @@
 package edu.mdsd.mpl.validation;
 
 import static edu.mdsd.mpl.validation.ConstraintHelper.filter;
+import static edu.mdsd.mpl.validation.ConstraintHelper.getParameters;
+import static edu.mdsd.mpl.validation.ConstraintHelper.getVariables;
 import static edu.mdsd.mpl.validation.ConstraintHelper.parentClosure;
 
 import java.util.List;
@@ -13,7 +15,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.IValidationContext;
 
-import edu.mdsd.mpl.mpl.Program;
 import edu.mdsd.mpl.mpl.Variable;
 import edu.mdsd.mpl.mpl.VariableDeclaration;
 import edu.mdsd.mpl.mpl.VariableReference;
@@ -39,8 +40,9 @@ public class VariableMustHaveBeenDeclaredConstraint extends AbstractModelConstra
 	}
 
 	private List<Variable> getDeclaredVariableList(VariableDeclaration varDecl) {
-		return ((Program) varDecl.eContainer()).getVariableDeclarations().stream().map(VariableDeclaration::getVariable)
-				.collect(Collectors.toList());
+		Stream<Variable> parameters = getParameters(varDecl);
+		Stream<Variable> variables = getVariables(varDecl);
+		return Stream.concat(parameters, variables).collect(Collectors.toList());
 	}
 
 }
