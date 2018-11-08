@@ -1,9 +1,8 @@
 package edu.mdsd.mpl.validation;
 
-import static edu.mdsd.mpl.validation.ConstraintHelper.filter;
 import static edu.mdsd.mpl.validation.ConstraintHelper.getParameters;
+import static edu.mdsd.mpl.validation.ConstraintHelper.getParent;
 import static edu.mdsd.mpl.validation.ConstraintHelper.getVariables;
-import static edu.mdsd.mpl.validation.ConstraintHelper.parentClosure;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.IValidationContext;
 
@@ -26,8 +24,7 @@ public class VariableMustHaveBeenDeclaredConstraint extends AbstractModelConstra
 		VariableReference varRef = (VariableReference) ctx.getTarget();
 		String varName = varRef.getVariable().getName();
 
-		Stream<EObject> parents = parentClosure(varRef);
-		Optional<VariableDeclaration> isInsideDeclaration = filter(parents, VariableDeclaration.class).findAny();
+		Optional<VariableDeclaration> isInsideDeclaration = getParent(varRef, VariableDeclaration.class);
 		return isInsideDeclaration.flatMap((varDecl) -> {
 			List<Variable> vars = getDeclaredVariableList(varDecl);
 			int posVarRef = vars.indexOf(varRef.getVariable());

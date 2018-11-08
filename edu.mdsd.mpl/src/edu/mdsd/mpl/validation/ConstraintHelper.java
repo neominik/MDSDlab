@@ -1,5 +1,6 @@
 package edu.mdsd.mpl.validation;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -12,6 +13,14 @@ import edu.mdsd.mpl.mpl.VariableDeclaration;
 
 public abstract class ConstraintHelper {
 
+	public static <T extends EObject> Optional<T> getParent(EObject initial, Class<T> clazz) {
+		return parentsByClass(initial, clazz).findAny();
+	}
+
+	public static <T extends EObject> Stream<T> parentsByClass(EObject initial, Class<T> clazz) {
+		return filter(parentClosure(initial), clazz);
+	}
+
 	public static Stream<EObject> parentClosure(EObject initial) {
 		return Stream.iterate(initial, nonNull(), EObject::eContainer);
 	}
@@ -22,11 +31,11 @@ public abstract class ConstraintHelper {
 	}
 
 	public static Stream<Variable> getParameters(EObject variable) {
-		return filter(parentClosure(variable), Operation.class).flatMap(o -> o.getParameters().stream());
+		return parentsByClass(variable, Operation.class).flatMap(o -> o.getParameters().stream());
 	}
 
 	public static Stream<Variable> getVariables(EObject variable) {
-		return filter(parentClosure(variable), FunctionalUnit.class).flatMap(o -> o.getVariableDeclarations().stream())
+		return parentsByClass(variable, FunctionalUnit.class).flatMap(o -> o.getVariableDeclarations().stream())
 				.map(VariableDeclaration::getVariable);
 	}
 

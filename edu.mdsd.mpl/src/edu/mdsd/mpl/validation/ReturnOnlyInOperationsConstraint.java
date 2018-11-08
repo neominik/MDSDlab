@@ -1,7 +1,6 @@
 package edu.mdsd.mpl.validation;
 
-import static edu.mdsd.mpl.validation.ConstraintHelper.filter;
-import static edu.mdsd.mpl.validation.ConstraintHelper.parentClosure;
+import static edu.mdsd.mpl.validation.ConstraintHelper.getParent;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.AbstractModelConstraint;
@@ -15,8 +14,7 @@ public class ReturnOnlyInOperationsConstraint extends AbstractModelConstraint {
 	@Override
 	public IStatus validate(IValidationContext ctx) {
 		Return ret = (Return) ctx.getTarget();
-		return filter(parentClosure(ret), Operation.class).findAny().map(o -> ctx.createSuccessStatus())
-				.orElseGet(ctx::createFailureStatus);
+		return getParent(ret, Operation.class).map(o -> ctx.createSuccessStatus()).orElseGet(ctx::createFailureStatus);
 	}
 
 }

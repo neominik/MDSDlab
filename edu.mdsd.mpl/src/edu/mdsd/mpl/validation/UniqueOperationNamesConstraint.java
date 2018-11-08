@@ -1,7 +1,6 @@
 package edu.mdsd.mpl.validation;
 
-import static edu.mdsd.mpl.validation.ConstraintHelper.filter;
-import static edu.mdsd.mpl.validation.ConstraintHelper.parentClosure;
+import static edu.mdsd.mpl.validation.ConstraintHelper.parentsByClass;
 
 import java.util.stream.Stream;
 
@@ -31,11 +30,11 @@ public class UniqueOperationNamesConstraint extends AbstractModelConstraint {
 	}
 
 	public static Stream<? extends FunctionalUnit> getProgram(EObject element) {
-		return filter(parentClosure(element), MPLModel.class).map(MPLModel::getProgram);
+		return parentsByClass(element, MPLModel.class).map(MPLModel::getProgram);
 	}
 
 	public static Stream<? extends FunctionalUnit> getOperations(EObject element) {
-		return filter(parentClosure(element), MPLModel.class).flatMap(m -> m.getOperations().stream());
+		return parentsByClass(element, MPLModel.class).flatMap(m -> m.getOperations().stream());
 	}
 
 }
