@@ -124,6 +124,38 @@
                      class="Return">
                </target>
             </constraint>
+            <constraint
+                  class="edu.mdsd.mpl.validation.ReturnValueConstraint"
+                  id="edu.mdsd.mpl.validation.ReturnValueConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="ReturnValueConstraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  This Function has to return a value.
+               </message>
+               <target
+                     class="Return">
+               </target>
+            </constraint>
+            <constraint
+                  class="edu.mdsd.mpl.validation.ReturnNoValueConstraint"
+                  id="edu.mdsd.mpl.validation.ReturnNoValueConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="ReturnNoValueConstraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  This Procedure must not return a value.
+               </message>
+               <target
+                     class="Return">
+               </target>
+            </constraint>
          </constraints>
       </constraintProvider>
    </extension>
