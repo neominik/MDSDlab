@@ -172,6 +172,22 @@
                      class="OperationExpression">
                </target>
             </constraint>
+            <constraint
+                  class="edu.mdsd.mpl.validation.NoSideEffectsConstraints"
+                  id="edu.mdsd.mpl.validation.NoSideEffectsConstraints"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="NoSideEffectsConstraints"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  This expression does not have a side effect.
+               </message>
+               <target
+                     class="ExpressionStatement">
+               </target>
+            </constraint>
          </constraints>
       </constraintProvider>
    </extension>
