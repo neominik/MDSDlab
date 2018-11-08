@@ -1,5 +1,6 @@
 package edu.mdsd.mpl.validation;
 
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
@@ -12,7 +13,7 @@ import edu.mdsd.mpl.mpl.VariableDeclaration;
 public abstract class ConstraintHelper {
 
 	public static Stream<EObject> parentClosure(EObject initial) {
-		return Stream.iterate(initial, eo -> eo.eContainer() != null, EObject::eContainer);
+		return Stream.iterate(initial, nonNull(), EObject::eContainer);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -29,4 +30,7 @@ public abstract class ConstraintHelper {
 				.map(VariableDeclaration::getVariable);
 	}
 
+	public static <T> Predicate<T> nonNull() {
+		return t -> t != null;
+	}
 }
