@@ -76,6 +76,22 @@
                      class="For">
                </target>
             </constraint>
+            <constraint
+                  class="edu.mdsd.mpl.validation.ArityConstraint"
+                  id="edu.mdsd.mpl.validation.ArityConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="ArityConstraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  Wrong number of arguments ({0}) passed to &quot;{1}&quot;. Required is {2}.
+               </message>
+               <target
+                     class="OperationExpression">
+               </target>
+            </constraint>
          </constraints>
       </constraintProvider>
    </extension>
