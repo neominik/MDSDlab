@@ -156,6 +156,22 @@
                      class="Return">
                </target>
             </constraint>
+            <constraint
+                  class="edu.mdsd.mpl.validation.ProcedureMayOnlyBeCalledFromExpressionStatementConstraint"
+                  id="edu.mdsd.mpl.validation.ProcedureMayOnlyBeCalledFromExpressionStatementConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="ProcedureMayOnlyBeCalledFromExpressionStatementConstraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  Cannot call a procedure where a value is expected.
+               </message>
+               <target
+                     class="OperationExpression">
+               </target>
+            </constraint>
          </constraints>
       </constraintProvider>
    </extension>
