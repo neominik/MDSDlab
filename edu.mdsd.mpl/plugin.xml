@@ -188,6 +188,22 @@
                      class="ExpressionStatement">
                </target>
             </constraint>
+            <constraint
+                  class="edu.mdsd.mpl.validation.CodeAfterReturnConstraint"
+                  id="edu.mdsd.mpl.validation.CodeAfterReturnConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="CodeAfterReturnConstraint"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  Unreachable code.
+               </message>
+               <target
+                     class="Statement">
+               </target>
+            </constraint>
          </constraints>
       </constraintProvider>
    </extension>
