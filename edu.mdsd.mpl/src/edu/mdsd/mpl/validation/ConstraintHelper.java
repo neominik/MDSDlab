@@ -4,7 +4,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.validation.IValidationContext;
 
 import edu.mdsd.mpl.mpl.FunctionalUnit;
 import edu.mdsd.mpl.mpl.Operation;
@@ -12,6 +14,13 @@ import edu.mdsd.mpl.mpl.Variable;
 import edu.mdsd.mpl.mpl.VariableDeclaration;
 
 public abstract class ConstraintHelper {
+	
+	public static IStatus asStatus(IValidationContext ctx, boolean status, Object... args) {
+		if(status) {
+			return ctx.createSuccessStatus();
+		}
+		return ctx.createFailureStatus(args);
+	}
 
 	public static <T extends EObject> Optional<T> getParent(EObject initial, Class<T> clazz) {
 		return parentsByClass(initial, clazz).findAny();

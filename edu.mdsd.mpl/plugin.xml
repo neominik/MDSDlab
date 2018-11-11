@@ -134,7 +134,7 @@
                   severity="ERROR"
                   statusCode="1">
                <message>
-                  This Function has to return a value.
+                  A Function has to return a value.
                </message>
                <target
                      class="Return">
@@ -150,7 +150,7 @@
                   severity="ERROR"
                   statusCode="1">
                <message>
-                  This Procedure must not return a value.
+                  A Procedure must not return a value.
                </message>
                <target
                      class="Return">
@@ -202,6 +202,22 @@
                </message>
                <target
                      class="Statement">
+               </target>
+            </constraint>
+            <constraint
+                  class="edu.mdsd.mpl.validation.FunctionsReturnConstraint"
+                  id="edu.mdsd.mpl.validation.FunctionsReturnConstraint"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="FunctionsReturnConstraint"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  A Function has to return a value.
+               </message>
+               <target
+                     class="Function">
                </target>
             </constraint>
          </constraints>
