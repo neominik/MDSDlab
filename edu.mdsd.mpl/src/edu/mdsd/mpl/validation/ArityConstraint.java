@@ -1,5 +1,7 @@
 package edu.mdsd.mpl.validation;
 
+import static edu.mdsd.mpl.validation.ConstraintHelper.asStatus;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.IValidationContext;
@@ -13,10 +15,7 @@ public class ArityConstraint extends AbstractModelConstraint {
 		OperationExpression target = (OperationExpression) ctx.getTarget();
 		int callerArity = target.getParameterValues().size();
 		int calleeArity = target.getOperation().getParameters().size();
-		if (callerArity != calleeArity) {
-			return ctx.createFailureStatus(callerArity, target.getOperation().getName(), calleeArity);
-		}
-		return ctx.createSuccessStatus();
+		return asStatus(ctx, callerArity == calleeArity, callerArity, target.getOperation().getName(), calleeArity);
 	}
 
 }

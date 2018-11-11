@@ -1,5 +1,7 @@
 package edu.mdsd.mpl.validation;
 
+import static edu.mdsd.mpl.validation.ConstraintHelper.asStatus;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.IValidationContext;
@@ -12,10 +14,7 @@ public class NoSideEffectsConstraints extends AbstractModelConstraint {
 	@Override
 	public IStatus validate(IValidationContext ctx) {
 		ExpressionStatement statement = (ExpressionStatement) ctx.getTarget();
-		if (statement.getExpression() instanceof OperationExpression) {
-			return ctx.createSuccessStatus();
-		}
-		return ctx.createFailureStatus();
+		return asStatus(ctx, statement.getExpression() instanceof OperationExpression);
 	}
 
 }

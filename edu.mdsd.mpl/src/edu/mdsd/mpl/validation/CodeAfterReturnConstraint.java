@@ -1,5 +1,7 @@
 package edu.mdsd.mpl.validation;
 
+import static edu.mdsd.mpl.validation.ConstraintHelper.asStatus;
+
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -18,12 +20,10 @@ public class CodeAfterReturnConstraint extends AbstractModelConstraint {
 		Block block = (Block) statement.eContainer();
 		List<Statement> statements = block.getStatements();
 		int statementIndex = statements.indexOf(statement);
-		int returnIndex = statements.stream().filter(s -> s.getForm() instanceof Return).findFirst().map(statements::indexOf)
-				.orElse(Integer.MAX_VALUE);
-		if (statementIndex > returnIndex) {
-			return ctx.createFailureStatus();
-		}
-		return ctx.createSuccessStatus();
+		// TODO pull up sequential blocks
+		int returnIndex = statements.stream().filter(s -> s.getForm() instanceof Return).findFirst()
+				.map(statements::indexOf).orElse(Integer.MAX_VALUE);
+		return asStatus(ctx, statementIndex <= returnIndex);
 	}
 
 }

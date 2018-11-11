@@ -1,5 +1,7 @@
 package edu.mdsd.mpl.validation;
 
+import static edu.mdsd.mpl.validation.ConstraintHelper.asStatus;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.IValidationContext;
@@ -13,10 +15,9 @@ public class ProcedureMayOnlyBeCalledFromExpressionStatementConstraint extends A
 	@Override
 	public IStatus validate(IValidationContext ctx) {
 		OperationExpression expr = (OperationExpression) ctx.getTarget();
-		if (!(expr.getOperation() instanceof Procedure) || expr.eContainer() instanceof ExpressionStatement) {
-			return ctx.createSuccessStatus();
-		}
-		return ctx.createFailureStatus();
+		boolean success = !(expr.getOperation() instanceof Procedure)
+				|| expr.eContainer() instanceof ExpressionStatement;
+		return asStatus(ctx, success);
 	}
 
 }
