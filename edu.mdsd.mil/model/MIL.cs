@@ -6,6 +6,7 @@ OPTIONS {
 	reloadGeneratorModel = "true";
 	defaultTokenName = "IDENTIFIER_TOKEN";
 	usePredefinedTokens = "false";
+	overrideLaunchConfigurationDelegate = "false";
 }
 
 TOKENS {
