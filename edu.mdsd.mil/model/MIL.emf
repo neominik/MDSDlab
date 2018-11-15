@@ -1,0 +1,32 @@
+@namespace(uri="http://mdsd.edu/mil/1.0", prefix="mil")
+package mil;
+
+class MILModel {
+  val Instruction[*] instructions;
+}
+
+abstract class Instruction {
+}
+
+class LoadInstruction extends Instruction {
+  val Value[1] value;
+}
+
+class StoreInstruction extends Instruction {
+  val RegisterReference registerReference;
+}
+
+class AddInstruction extends Instruction {
+}
+
+abstract class Value {
+}
+
+class ConstantInteger extends Value {
+  attr int[1] rawValue;
+}
+
+class RegisterReference extends Value {
+  attr String[1] address;
+}
+
