@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: EMFText Parser Plugin: mil
+Bundle-SymbolicName: edu.mdsd.mil.resource.mil;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Software Technology Group - TU Dresden Germany
+Require-Bundle: org.eclipse.core.runtime;resolution:=optional,
+  org.eclipse.core.resources;resolution:=optional,
+  org.eclipse.emf.ecore,
+  org.eclipse.emf.ecore.change,
+  org.eclipse.emf.validation;resolution:=optional,
+  org.emftext.access;resolution:=optional,
+  org.eclipse.debug.core;resolution:=optional,
+  org.emftext.commons.antlr3_4_0,
+  edu.mdsd.mil
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: edu.mdsd.mil.resource.mil,
+  edu.mdsd.mil.resource.mil.analysis,
+  edu.mdsd.mil.resource.mil.mopp,
+  edu.mdsd.mil.resource.mil.debug,
+  edu.mdsd.mil.resource.mil.launch,
+  edu.mdsd.mil.resource.mil.grammar,
+  edu.mdsd.mil.resource.mil.util
+Bundle-Activator: edu.mdsd.mil.resource.mil.mopp.MilPlugin
