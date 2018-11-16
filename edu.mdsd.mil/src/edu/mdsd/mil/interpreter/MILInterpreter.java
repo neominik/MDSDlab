@@ -1,7 +1,6 @@
 package edu.mdsd.mil.interpreter;
 
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -10,6 +9,7 @@ import java.util.function.IntBinaryOperator;
 import java.util.function.IntConsumer;
 import java.util.function.IntUnaryOperator;
 
+import edu.mdsd.mil.CalInstruction;
 import edu.mdsd.mil.ConstantInteger;
 import edu.mdsd.mil.Instruction;
 import edu.mdsd.mil.JpcInstruction;
@@ -20,6 +20,7 @@ import edu.mdsd.mil.MILModel;
 import edu.mdsd.mil.MILPackage;
 import edu.mdsd.mil.PrtInstruction;
 import edu.mdsd.mil.RegisterReference;
+import edu.mdsd.mil.RetInstruction;
 import edu.mdsd.mil.StoreInstruction;
 import edu.mdsd.mil.Value;
 
@@ -27,13 +28,14 @@ public class MILInterpreter {
 
 	private int pc = 0;
 	private Stack<Integer> operandStack = new Stack<>();
-	private Map<String, Integer> register = new HashMap<>();
+	private Stack<StackFrame> callStack = new Stack<>();
 	private List<Instruction> instructions;
 
 	private PrintStream out;
 
 	public MILInterpreter(PrintStream out) {
 		this.out = out;
+		callStack.push(new StackFrame(0));
 	}
 
 	public void interpretAndPrintResult(MILModel model) {
@@ -49,7 +51,7 @@ public class MILInterpreter {
 			Instruction instruction = instructions.get(pc);
 			interpretSingle(instruction);
 		}
-		return register;
+		return callStack.peek().getRegister();
 	}
 
 	private void interpretSingle(Instruction instruction) {
@@ -82,6 +84,12 @@ public class MILInterpreter {
 			break;
 		case MILPackage.JPC_INSTRUCTION:
 			interpret((JpcInstruction) instruction);
+			break;
+		case MILPackage.CAL_INSTRUCTION:
+			interpret((CalInstruction) instruction);
+			break;
+		case MILPackage.RET_INSTRUCTION:
+			interpret((RetInstruction) instruction);
 			break;
 		case MILPackage.YLD_INSTRUCTION:
 			interpretConsumer(this::print);
@@ -158,6 +166,16 @@ public class MILInterpreter {
 		});
 	}
 
+	private void interpret(CalInstruction instruction) {
+		callStack.push(new StackFrame(pc));
+		interpret((JumpInstruction) instruction);
+	}
+
+	private void interpret(RetInstruction instruction) {
+		StackFrame oldFrame = callStack.pop();
+		pc = oldFrame.getReturnAddress();
+	}
+
 	private void interpret(PrtInstruction instruction) {
 		String text = instruction.getValue();
 		print(text);
@@ -182,11 +200,11 @@ public class MILInterpreter {
 	}
 
 	private int getRegisterValue(String address) {
-		return register.getOrDefault(address, 0);
+		return callStack.peek().getRegister().getOrDefault(address, 0);
 	}
 
 	private void setRegisterValue(String address, int rawValue) {
-		register.put(address, rawValue);
+		callStack.peek().getRegister().put(address, rawValue);
 	}
 
 	private void print(int i) {
