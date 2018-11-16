@@ -48,12 +48,12 @@ RULES {
 	GtInstruction ::= "gt";
 	GeqInstruction ::= "geq";
 	
-	LabelInstruction ::= name[] ":";
-	JmpInstruction ::= "jmp" label[];
-	JpcInstruction ::= "jpc" label[];
+	LabelInstruction ::= name[] #0 ":";
+	JmpInstruction ::= "jmp" #1 label[];
+	JpcInstruction ::= "jpc" #1 label[];
 	
 	YldInstruction ::= "yld";
-	PrtInstruction ::= "prt" value[STRING_TOKEN];
+	PrtInstruction ::= "prt" #1 value[STRING_TOKEN];
 	
 	ConstantInteger ::= rawValue[INTEGER_TOKEN];
 	RegisterReference ::= address[];	
