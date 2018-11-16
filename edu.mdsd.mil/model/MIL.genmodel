@@ -34,6 +34,8 @@
     </genClasses>
     <genClasses ecoreClass="MIL.ecore#//JmpInstruction"/>
     <genClasses ecoreClass="MIL.ecore#//JpcInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//CalInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//RetInstruction"/>
     <genClasses ecoreClass="MIL.ecore#//LabelInstruction">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIL.ecore#//LabelInstruction/name"/>
     </genClasses>

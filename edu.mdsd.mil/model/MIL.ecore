@@ -30,6 +30,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JmpInstruction" eSuperTypes="#//JumpInstruction"/>
   <eClassifiers xsi:type="ecore:EClass" name="JpcInstruction" eSuperTypes="#//JumpInstruction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CalInstruction" eSuperTypes="#//JumpInstruction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RetInstruction" eSuperTypes="#//Instruction"/>
   <eClassifiers xsi:type="ecore:EClass" name="LabelInstruction" eSuperTypes="#//Instruction">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>

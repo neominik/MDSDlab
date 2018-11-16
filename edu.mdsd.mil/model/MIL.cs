@@ -51,6 +51,8 @@ RULES {
 	LabelInstruction ::= name[] #0 ":";
 	JmpInstruction ::= "jmp" #1 label[];
 	JpcInstruction ::= "jpc" #1 label[];
+	CalInstruction ::= "cal" #1 label[];
+	RetInstruction ::= "ret";
 	
 	YldInstruction ::= "yld";
 	PrtInstruction ::= "prt" #1 value[STRING_TOKEN];

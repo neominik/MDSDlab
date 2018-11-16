@@ -59,6 +59,12 @@ class JmpInstruction extends JumpInstruction {
 class JpcInstruction extends JumpInstruction {
 }
 
+class CalInstruction extends JumpInstruction {
+}
+
+class RetInstruction extends Instruction {
+}
+
 class LabelInstruction extends Instruction {
   attr String[1] name;
 }
