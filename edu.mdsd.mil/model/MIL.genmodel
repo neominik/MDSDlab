@@ -22,6 +22,25 @@
     <genClasses ecoreClass="MIL.ecore#//SubInstruction"/>
     <genClasses ecoreClass="MIL.ecore#//MulInstruction"/>
     <genClasses ecoreClass="MIL.ecore#//DivInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//NegInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//EqInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//NeqInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//LtInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//LeqInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//GtInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//GeqInstruction"/>
+    <genClasses image="false" ecoreClass="MIL.ecore#//JumpInstruction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MIL.ecore#//JumpInstruction/label"/>
+    </genClasses>
+    <genClasses ecoreClass="MIL.ecore#//JmpInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//JpcInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//LabelInstruction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIL.ecore#//LabelInstruction/name"/>
+    </genClasses>
+    <genClasses ecoreClass="MIL.ecore#//YldInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//PrtInstruction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIL.ecore#//PrtInstruction/value"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="MIL.ecore#//Value"/>
     <genClasses ecoreClass="MIL.ecore#//ConstantInteger">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIL.ecore#//ConstantInteger/rawValue"/>

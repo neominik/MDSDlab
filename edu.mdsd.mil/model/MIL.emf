@@ -28,6 +28,48 @@ class MulInstruction extends Instruction {
 class DivInstruction extends Instruction {
 }
 
+class NegInstruction extends Instruction {
+}
+
+class EqInstruction extends Instruction {
+}
+
+class NeqInstruction extends Instruction {
+}
+
+class LtInstruction extends Instruction {
+}
+
+class LeqInstruction extends Instruction {
+}
+
+class GtInstruction extends Instruction {
+}
+
+class GeqInstruction extends Instruction {
+}
+
+abstract class JumpInstruction extends Instruction {
+  ref LabelInstruction[1] label;
+}
+
+class JmpInstruction extends JumpInstruction {
+}
+
+class JpcInstruction extends JumpInstruction {
+}
+
+class LabelInstruction extends Instruction {
+  attr String[1] name;
+}
+
+class YldInstruction extends Instruction {
+}
+
+class PrtInstruction extends Instruction {
+  attr String[1] value;
+}
+
 abstract class Value {
 }
 

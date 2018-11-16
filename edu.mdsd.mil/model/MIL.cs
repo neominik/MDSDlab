@@ -12,6 +12,7 @@ OPTIONS {
 TOKENS {
 	DEFINE IDENTIFIER_TOKEN $('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*$;
 	DEFINE INTEGER_TOKEN $('-')?('0'..'9')+$;
+	DEFINE STRING_TOKEN $'"'('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\\')|~('\\'|'"'))*'"'$;
 	
 	DEFINE SL_COMMENT $'//'(~('\n'|'\r'|'\uffff'))*$;
 	DEFINE ML_COMMENT $'/*'.*'*/'$;
@@ -23,6 +24,7 @@ TOKENS {
 TOKENSTYLES {
 	"IDENTIFIER_TOKEN" COLOR #6A3E3E;
 	"INTEGER_TOKEN" COLOR #0000C0;
+	"STRING_TOKEN" COLOR #2A00FF;
 	"SL_COMMENT", "ML_COMMENT" COLOR #3F7F5F;
 }
 
@@ -36,6 +38,22 @@ RULES {
 	SubInstruction ::= "sub";
 	MulInstruction ::= "mul";
 	DivInstruction ::= "div";
+	
+	NegInstruction ::= "neg";
+	
+	EqInstruction ::= "eq";
+	NeqInstruction ::= "neq";
+	LtInstruction ::= "lt";
+	LeqInstruction ::= "leq";
+	GtInstruction ::= "gt";
+	GeqInstruction ::= "geq";
+	
+	LabelInstruction ::= name[] ":";
+	JmpInstruction ::= "jmp" label[];
+	JpcInstruction ::= "jpc" label[];
+	
+	YldInstruction ::= "yld";
+	PrtInstruction ::= "prt" value[STRING_TOKEN];
 	
 	ConstantInteger ::= rawValue[INTEGER_TOKEN];
 	RegisterReference ::= address[];	
