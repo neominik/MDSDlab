@@ -19,6 +19,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MIL.ecore#//StoreInstruction/registerReference"/>
     </genClasses>
     <genClasses ecoreClass="MIL.ecore#//AddInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//SubInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//MulInstruction"/>
+    <genClasses ecoreClass="MIL.ecore#//DivInstruction"/>
     <genClasses image="false" ecoreClass="MIL.ecore#//Value"/>
     <genClasses ecoreClass="MIL.ecore#//ConstantInteger">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIL.ecore#//ConstantInteger/rawValue"/>

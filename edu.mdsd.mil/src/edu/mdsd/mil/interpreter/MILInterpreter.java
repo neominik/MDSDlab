@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.TreeMap;
+import java.util.function.IntBinaryOperator;
 
-import edu.mdsd.mil.AddInstruction;
 import edu.mdsd.mil.ConstantInteger;
 import edu.mdsd.mil.Instruction;
 import edu.mdsd.mil.LoadInstruction;
@@ -22,7 +23,7 @@ public class MILInterpreter {
 	private Map<String, Integer> register = new HashMap<>();
 
 	public void interpretAndPrintResult(MILModel model) {
-		Map<String, Integer> result = interpret(model);
+		Map<String, Integer> result = new TreeMap<>(interpret(model));
 
 		System.out.println("Results:");
 		result.forEach((address, rawValue) -> System.out.println(address + " = " + rawValue));
@@ -40,7 +41,16 @@ public class MILInterpreter {
 	private void interpretSingle(Instruction instruction) {
 		switch (instruction.eClass().getClassifierID()) {
 		case MILPackage.ADD_INSTRUCTION:
-			interpret((AddInstruction) instruction);
+			interpretBinaryOperator((a, b) -> a + b);
+			break;
+		case MILPackage.SUB_INSTRUCTION:
+			interpretBinaryOperator((a, b) -> a - b);
+			break;
+		case MILPackage.MUL_INSTRUCTION:
+			interpretBinaryOperator((a, b) -> a * b);
+			break;
+		case MILPackage.DIV_INSTRUCTION:
+			interpretBinaryOperator((a, b) -> a / b);
 			break;
 		case MILPackage.LOAD_INSTRUCTION:
 			interpret((LoadInstruction) instruction);
@@ -53,10 +63,10 @@ public class MILInterpreter {
 		}
 	}
 
-	private void interpret(AddInstruction instruction) {
+	private void interpretBinaryOperator(IntBinaryOperator f) {
 		int operand2 = popFromOperandStack();
 		int operand1 = popFromOperandStack();
-		int result = operand1 + operand2;
+		int result = f.applyAsInt(operand1, operand2);
 		pushOnOperandStack(result);
 	}
 

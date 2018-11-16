@@ -15,6 +15,9 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AddInstruction" eSuperTypes="#//Instruction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SubInstruction" eSuperTypes="#//Instruction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MulInstruction" eSuperTypes="#//Instruction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DivInstruction" eSuperTypes="#//Instruction"/>
   <eClassifiers xsi:type="ecore:EClass" name="Value" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ConstantInteger" eSuperTypes="#//Value">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rawValue" lowerBound="1"

@@ -19,6 +19,15 @@ class StoreInstruction extends Instruction {
 class AddInstruction extends Instruction {
 }
 
+class SubInstruction extends Instruction {
+}
+
+class MulInstruction extends Instruction {
+}
+
+class DivInstruction extends Instruction {
+}
+
 abstract class Value {
 }
 
