@@ -1,5 +1,6 @@
 package edu.mdsd.mil.interpreter;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +30,17 @@ public class MILInterpreter {
 	private Map<String, Integer> register = new HashMap<>();
 	private List<Instruction> instructions;
 
+	private PrintStream out;
+
+	public MILInterpreter(PrintStream out) {
+		this.out = out;
+	}
+
 	public void interpretAndPrintResult(MILModel model) {
 		Map<String, Integer> result = new TreeMap<>(interpret(model));
 
-		System.out.println("Results:");
-		result.forEach((address, rawValue) -> System.out.println(address + " = " + rawValue));
+		out.println("Results:");
+		result.forEach((address, rawValue) -> out.println(address + " = " + rawValue));
 	}
 
 	public Map<String, Integer> interpret(MILModel model) {
@@ -183,11 +190,11 @@ public class MILInterpreter {
 	}
 
 	private void print(int i) {
-		System.out.println(i);
+		out.println(i);
 	}
 
 	private void print(String text) {
-		System.out.print(text);
+		out.print(text);
 	}
 
 	private int unsupported(Object o) {
