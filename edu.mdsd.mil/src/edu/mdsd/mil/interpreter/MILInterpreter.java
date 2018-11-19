@@ -3,6 +3,7 @@ package edu.mdsd.mil.interpreter;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.function.IntBinaryOperator;
@@ -145,13 +146,8 @@ public class MILInterpreter {
 	}
 
 	private void interpret(StoreInstruction instruction) {
-		RegisterReference reference = instruction.getRegisterReference();
-		int rawValue = popFromOperandStack();
-
-		if (reference != null) {
-			String address = reference.getAddress();
-			setRegisterValue(address, rawValue);
-		}
+		interpretConsumer(v -> Optional.ofNullable(instruction.getRegisterReference())
+				.map(RegisterReference::getAddress).ifPresent(address -> setRegisterValue(address, v)));
 	}
 
 	private void interpret(JumpInstruction instruction) {
@@ -160,8 +156,8 @@ public class MILInterpreter {
 	}
 
 	private void interpret(JpcInstruction instruction) {
-		interpretConsumer(operand -> {
-			if (operand == 0)
+		interpretConsumer(condition -> {
+			if (condition == 0)
 				interpret((JumpInstruction) instruction);
 		});
 	}
