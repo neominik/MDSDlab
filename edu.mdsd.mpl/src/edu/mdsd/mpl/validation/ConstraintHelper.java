@@ -8,15 +8,20 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 
+import edu.mdsd.mpl.mpl.Form;
 import edu.mdsd.mpl.mpl.FunctionalUnit;
+import edu.mdsd.mpl.mpl.If;
+import edu.mdsd.mpl.mpl.Loop;
 import edu.mdsd.mpl.mpl.Operation;
+import edu.mdsd.mpl.mpl.Return;
+import edu.mdsd.mpl.mpl.Statement;
 import edu.mdsd.mpl.mpl.Variable;
 import edu.mdsd.mpl.mpl.VariableDeclaration;
 
 public abstract class ConstraintHelper {
-	
+
 	public static IStatus asStatus(IValidationContext ctx, boolean status, Object... args) {
-		if(status) {
+		if (status) {
 			return ctx.createSuccessStatus();
 		}
 		return ctx.createFailureStatus(args);
@@ -50,5 +55,34 @@ public abstract class ConstraintHelper {
 
 	public static <T> Predicate<T> nonNull() {
 		return t -> t != null;
+	}
+
+	public static boolean returns(Statement statement) {
+		Form form = statement.getForm();
+		if (form instanceof Return) {
+			return true;
+		}
+		if (form instanceof Loop) {
+			return loopReturns((Loop) form);
+		}
+		if (form instanceof If) {
+			return ifReturns((If) form);
+		}
+		return false;
+	}
+
+	private static boolean loopReturns(Loop loop) {
+		if (loop.getBody() != null) {
+			return loop.getBody().getStatements().stream().anyMatch(ConstraintHelper::returns);
+		}
+		return false;
+	}
+
+	private static boolean ifReturns(If ifForm) {
+		if (ifForm.getThen() != null && ifForm.getElse() != null) {
+			return ifForm.getThen().getStatements().stream().anyMatch(ConstraintHelper::returns)
+					&& ifForm.getElse().getStatements().stream().anyMatch(ConstraintHelper::returns);
+		}
+		return false;
 	}
 }
