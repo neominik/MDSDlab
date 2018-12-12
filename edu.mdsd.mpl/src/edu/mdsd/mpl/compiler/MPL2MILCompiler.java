@@ -41,6 +41,7 @@ import edu.mdsd.mpl.mpl.ComparisonOperator;
 import edu.mdsd.mpl.mpl.DivisionExpression;
 import edu.mdsd.mpl.mpl.Expression;
 import edu.mdsd.mpl.mpl.ExpressionStatement;
+import edu.mdsd.mpl.mpl.For;
 import edu.mdsd.mpl.mpl.Form;
 import edu.mdsd.mpl.mpl.If;
 import edu.mdsd.mpl.mpl.LiteralValue;
@@ -178,8 +179,10 @@ public class MPL2MILCompiler {
 			return compile((ExpressionStatement) form);
 		case MPLPackage.IF:
 			return compile((If) form);
+		case MPLPackage.FOR:
+			return compile((For) form);
 		}
-		return unsupported(statement);
+		return unsupported(form);
 	}
 
 	private Stream<Instruction> compile(Assignment assignment) {
@@ -230,6 +233,26 @@ public class MPL2MILCompiler {
 			return createGeqInstruction();
 		}
 		return unsupported(operator);
+	}
+
+	private Stream<Instruction> compile(For loop) {
+		LabelInstruction forLabel = createLabelInstruction("for_" + getSeed(loop));
+		LabelInstruction endLabel = createLabelInstruction("endfor_" + getSeed(loop));
+		return stream(compile(loop.getFrom()), stream(forLabel), getCondition(loop), createJpcInstruction(endLabel),
+				compile(loop.getBody()), getIncrement(loop), createJmpInstruction(forLabel), stream(endLabel));
+	}
+
+	private Stream<Instruction> getCondition(For loop) {
+		Stream<Instruction> loadInstruction = createLoadInstruction(
+				loop.getFrom().getLeftHandSide().getVariable().getName());
+		Stream<Instruction> comparator = loop.getDownwards() ? createGtInstruction() : createLtInstruction();
+		return stream(loadInstruction, compile(loop.getTo()), comparator);
+	}
+
+	private Stream<Instruction> getIncrement(For loop) {
+		String var = loop.getFrom().getLeftHandSide().getVariable().getName();
+		Stream<Instruction> operation = loop.getDownwards() ? createSubInstruction() : createAddInstruction();
+		return stream(createLoadInstruction(var), createLoadInstruction(1), operation, createStoreInstruction(var));
 	}
 
 	private Stream<Instruction> compileOperation(Operation operation) {
