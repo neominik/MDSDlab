@@ -3,10 +3,19 @@ package edu.mdsd.mil.util;
 import edu.mdsd.mil.AddInstruction;
 import edu.mdsd.mil.ConstantInteger;
 import edu.mdsd.mil.DivInstruction;
+import edu.mdsd.mil.EqInstruction;
+import edu.mdsd.mil.GeqInstruction;
+import edu.mdsd.mil.GtInstruction;
+import edu.mdsd.mil.JmpInstruction;
+import edu.mdsd.mil.JpcInstruction;
+import edu.mdsd.mil.LabelInstruction;
+import edu.mdsd.mil.LeqInstruction;
 import edu.mdsd.mil.LoadInstruction;
+import edu.mdsd.mil.LtInstruction;
 import edu.mdsd.mil.MILFactory;
 import edu.mdsd.mil.MILModel;
 import edu.mdsd.mil.MulInstruction;
+import edu.mdsd.mil.NeqInstruction;
 import edu.mdsd.mil.PrtInstruction;
 import edu.mdsd.mil.RegisterReference;
 import edu.mdsd.mil.StoreInstruction;
@@ -61,6 +70,48 @@ public class MILCreationUtil {
 
 	public static DivInstruction createDivInstruction() {
 		return FACTORY.createDivInstruction();
+	}
+
+	public static LabelInstruction createLabelInstruction(String name) {
+		LabelInstruction inst = FACTORY.createLabelInstruction();
+		inst.setName(name);
+		return inst;
+	}
+
+	public static JmpInstruction createJmpInstruction(LabelInstruction label) {
+		JmpInstruction inst = FACTORY.createJmpInstruction();
+		inst.setLabel(label);
+		return inst;
+	}
+
+	public static JpcInstruction createJpcInstruction(LabelInstruction label) {
+		JpcInstruction inst = FACTORY.createJpcInstruction();
+		inst.setLabel(label);
+		return inst;
+	}
+
+	public static EqInstruction createEqInstruction() {
+		return FACTORY.createEqInstruction();
+	}
+
+	public static NeqInstruction createNeqInstruction() {
+		return FACTORY.createNeqInstruction();
+	}
+
+	public static LtInstruction createLtInstruction() {
+		return FACTORY.createLtInstruction();
+	}
+
+	public static GtInstruction createGtInstruction() {
+		return FACTORY.createGtInstruction();
+	}
+
+	public static LeqInstruction createLeqInstruction() {
+		return FACTORY.createLeqInstruction();
+	}
+
+	public static GeqInstruction createGeqInstruction() {
+		return FACTORY.createGeqInstruction();
 	}
 
 	public static PrtInstruction createPrint(String message) {

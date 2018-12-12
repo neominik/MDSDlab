@@ -2,9 +2,18 @@ package edu.mdsd.mpl.compiler;
 
 import static edu.mdsd.mil.util.MILCreationUtil.createAddInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createDivInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createEqInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createGeqInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createGtInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createJmpInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createJpcInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createLabelInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createLeqInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createLoadInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createLtInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createMILModel;
 import static edu.mdsd.mil.util.MILCreationUtil.createMulInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createNeqInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createPrint;
 import static edu.mdsd.mil.util.MILCreationUtil.createStoreInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createSubInstruction;
@@ -22,14 +31,19 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 import edu.mdsd.mil.Instruction;
+import edu.mdsd.mil.LabelInstruction;
 import edu.mdsd.mil.MILModel;
 import edu.mdsd.mpl.mpl.AddExpression;
 import edu.mdsd.mpl.mpl.ArithmeticExpression;
 import edu.mdsd.mpl.mpl.Assignment;
+import edu.mdsd.mpl.mpl.Block;
+import edu.mdsd.mpl.mpl.Comparison;
+import edu.mdsd.mpl.mpl.ComparisonOperator;
 import edu.mdsd.mpl.mpl.DivisionExpression;
 import edu.mdsd.mpl.mpl.Expression;
 import edu.mdsd.mpl.mpl.ExpressionStatement;
 import edu.mdsd.mpl.mpl.Form;
+import edu.mdsd.mpl.mpl.If;
 import edu.mdsd.mpl.mpl.LiteralValue;
 import edu.mdsd.mpl.mpl.MPLModel;
 import edu.mdsd.mpl.mpl.MPLPackage;
@@ -166,6 +180,8 @@ public class MPL2MILCompiler {
 			return compile((Assignment) form);
 		case MPLPackage.EXPRESSION_STATEMENT:
 			return compile((ExpressionStatement) form);
+		case MPLPackage.IF:
+			return compile((If) form);
 		}
 		return unsupported(statement);
 	}
@@ -178,11 +194,57 @@ public class MPL2MILCompiler {
 		return stream(compile(statement.getExpression()), createStoreInstruction());
 	}
 
+	private Stream<Instruction> compile(If ifForm) {
+		LabelInstruction endLabel = createLabelInstruction("endif_" + getSeed(ifForm));
+		return stream(compile(ifForm.getCondition()), compileThenElse(ifForm, endLabel), endLabel);
+	}
+
+	private Stream<Instruction> compileThenElse(If ifForm, LabelInstruction endLabel) {
+		if (ifForm.getElse() != null) {
+			LabelInstruction elseLabel = createLabelInstruction("else_" + getSeed(ifForm));
+			return stream(createJpcInstruction(elseLabel), compile(ifForm.getThen()), createJmpInstruction(endLabel),
+					elseLabel, compile(ifForm.getElse()));
+		} else {
+			return stream(createJpcInstruction(endLabel), compile(ifForm.getThen()));
+		}
+	}
+
+	private Stream<Instruction> compile(Block block) {
+		return block.getStatements().stream().flatMap(this::compile);
+	}
+
+	private Stream<Instruction> compile(Comparison comparison) {
+		return stream(compile(comparison.getLeftHandSide()), compile(comparison.getRightHandSide()),
+				compile(comparison.getOperator()));
+	}
+
+	private Stream<Instruction> compile(ComparisonOperator operator) {
+		switch (operator.eClass().getClassifierID()) {
+		case MPLPackage.EQ:
+			return stream(createEqInstruction());
+		case MPLPackage.NE:
+			return stream(createNeqInstruction());
+		case MPLPackage.LT:
+			return stream(createLtInstruction());
+		case MPLPackage.GT:
+			return stream(createGtInstruction());
+		case MPLPackage.LE:
+			return stream(createLeqInstruction());
+		case MPLPackage.GE:
+			return stream(createGeqInstruction());
+		}
+		return unsupported(operator);
+	}
+
 	private Stream<Instruction> compileOperation(Operation operation) {
 		return unsupported(operation);
 	}
 
 	private Stream<Instruction> unsupported(Object o) {
 		return Stream.of(createPrint("Unsupported construct: " + o.getClass() + "\n"));
+	}
+
+	private String getSeed(Object o) {
+		return Integer.toHexString(System.identityHashCode(o));
 	}
 }
