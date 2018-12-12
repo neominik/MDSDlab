@@ -22,7 +22,6 @@ import static edu.mdsd.mpl.compiler.StreamUtil.stream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -104,11 +103,8 @@ public class MPL2MILCompiler {
 	}
 
 	private Stream<Instruction> compileVariableDeclaration(VariableDeclaration declaration) {
-		return Optional.ofNullable(declaration.getInitialValue()).map(expression -> {
-			Stream<Instruction> compiledExpression = compile(expression);
-			Stream<Instruction> compiledVariable = compile(declaration.getVariable());
-			return stream(compiledExpression, compiledVariable);
-		}).orElseGet(Stream::empty);
+		return Stream.ofNullable(declaration.getInitialValue())
+				.flatMap(expression -> stream(compile(expression), compile(declaration.getVariable())));
 	}
 
 	private Stream<Instruction> compile(Expression expression) {
@@ -134,11 +130,11 @@ public class MPL2MILCompiler {
 	}
 
 	private Stream<Instruction> compile(LiteralValue value) {
-		return stream(createLoadInstruction(value.getRawValue()));
+		return createLoadInstruction(value.getRawValue());
 	}
 
 	private Stream<Instruction> compile(VariableReference reference) {
-		return stream(createLoadInstruction(reference.getVariable().getName()));
+		return createLoadInstruction(reference.getVariable().getName());
 	}
 
 	private Stream<Instruction> compile(AddExpression add) {
@@ -157,7 +153,7 @@ public class MPL2MILCompiler {
 		return compileArithmeticExpression(div, createDivInstruction());
 	}
 
-	private Stream<Instruction> compileArithmeticExpression(ArithmeticExpression exp, Instruction inst) {
+	private Stream<Instruction> compileArithmeticExpression(ArithmeticExpression exp, Stream<Instruction> inst) {
 		return stream(compile(exp.getOperand1()), compile(exp.getOperand2()), inst);
 	}
 
@@ -170,7 +166,7 @@ public class MPL2MILCompiler {
 	}
 
 	private Stream<Instruction> compile(Variable variable) {
-		return stream(createStoreInstruction(variable.getName()));
+		return createStoreInstruction(variable.getName());
 	}
 
 	private Stream<Instruction> compile(Statement statement) {
@@ -196,14 +192,14 @@ public class MPL2MILCompiler {
 
 	private Stream<Instruction> compile(If ifForm) {
 		LabelInstruction endLabel = createLabelInstruction("endif_" + getSeed(ifForm));
-		return stream(compile(ifForm.getCondition()), compileThenElse(ifForm, endLabel), endLabel);
+		return stream(compile(ifForm.getCondition()), compileThenElse(ifForm, endLabel), stream(endLabel));
 	}
 
 	private Stream<Instruction> compileThenElse(If ifForm, LabelInstruction endLabel) {
 		if (ifForm.getElse() != null) {
 			LabelInstruction elseLabel = createLabelInstruction("else_" + getSeed(ifForm));
 			return stream(createJpcInstruction(elseLabel), compile(ifForm.getThen()), createJmpInstruction(endLabel),
-					elseLabel, compile(ifForm.getElse()));
+					stream(elseLabel), compile(ifForm.getElse()));
 		} else {
 			return stream(createJpcInstruction(endLabel), compile(ifForm.getThen()));
 		}
@@ -221,17 +217,17 @@ public class MPL2MILCompiler {
 	private Stream<Instruction> compile(ComparisonOperator operator) {
 		switch (operator.eClass().getClassifierID()) {
 		case MPLPackage.EQ:
-			return stream(createEqInstruction());
+			return createEqInstruction();
 		case MPLPackage.NE:
-			return stream(createNeqInstruction());
+			return createNeqInstruction();
 		case MPLPackage.LT:
-			return stream(createLtInstruction());
+			return createLtInstruction();
 		case MPLPackage.GT:
-			return stream(createGtInstruction());
+			return createGtInstruction();
 		case MPLPackage.LE:
-			return stream(createLeqInstruction());
+			return createLeqInstruction();
 		case MPLPackage.GE:
-			return stream(createGeqInstruction());
+			return createGeqInstruction();
 		}
 		return unsupported(operator);
 	}
@@ -241,7 +237,7 @@ public class MPL2MILCompiler {
 	}
 
 	private Stream<Instruction> unsupported(Object o) {
-		return Stream.of(createPrint("Unsupported construct: " + o.getClass() + "\n"));
+		return createPrint("Unsupported construct: " + o.getClass() + "\n");
 	}
 
 	private String getSeed(Object o) {

@@ -1,25 +1,18 @@
 package edu.mdsd.mil.util;
 
-import edu.mdsd.mil.AddInstruction;
+import java.util.stream.Stream;
+
 import edu.mdsd.mil.ConstantInteger;
-import edu.mdsd.mil.DivInstruction;
-import edu.mdsd.mil.EqInstruction;
-import edu.mdsd.mil.GeqInstruction;
-import edu.mdsd.mil.GtInstruction;
+import edu.mdsd.mil.Instruction;
 import edu.mdsd.mil.JmpInstruction;
 import edu.mdsd.mil.JpcInstruction;
 import edu.mdsd.mil.LabelInstruction;
-import edu.mdsd.mil.LeqInstruction;
 import edu.mdsd.mil.LoadInstruction;
-import edu.mdsd.mil.LtInstruction;
 import edu.mdsd.mil.MILFactory;
 import edu.mdsd.mil.MILModel;
-import edu.mdsd.mil.MulInstruction;
-import edu.mdsd.mil.NeqInstruction;
 import edu.mdsd.mil.PrtInstruction;
 import edu.mdsd.mil.RegisterReference;
 import edu.mdsd.mil.StoreInstruction;
-import edu.mdsd.mil.SubInstruction;
 
 public class MILCreationUtil {
 	private static final MILFactory FACTORY = MILFactory.eINSTANCE;
@@ -28,48 +21,48 @@ public class MILCreationUtil {
 		return FACTORY.createMILModel();
 	}
 
-	public static LoadInstruction createLoadInstruction(int value) {
+	public static Stream<Instruction> createLoadInstruction(int value) {
 		LoadInstruction inst = FACTORY.createLoadInstruction();
 		ConstantInteger val = FACTORY.createConstantInteger();
 		val.setRawValue(value);
 		inst.setValue(val);
-		return inst;
+		return stream(inst);
 	}
 
-	public static LoadInstruction createLoadInstruction(String name) {
+	public static Stream<Instruction> createLoadInstruction(String name) {
 		LoadInstruction inst = FACTORY.createLoadInstruction();
 		RegisterReference val = FACTORY.createRegisterReference();
 		val.setAddress(name);
 		inst.setValue(val);
-		return inst;
+		return stream(inst);
 	}
 
-	public static StoreInstruction createStoreInstruction(String addr) {
+	public static Stream<Instruction> createStoreInstruction(String addr) {
 		StoreInstruction inst = FACTORY.createStoreInstruction();
 		RegisterReference ref = FACTORY.createRegisterReference();
 		ref.setAddress(addr);
 		inst.setRegisterReference(ref);
-		return inst;
+		return stream(inst);
 	}
 
-	public static StoreInstruction createStoreInstruction() {
-		return FACTORY.createStoreInstruction();
+	public static Stream<Instruction> createStoreInstruction() {
+		return stream(FACTORY.createStoreInstruction());
 	}
 
-	public static AddInstruction createAddInstruction() {
-		return FACTORY.createAddInstruction();
+	public static Stream<Instruction> createAddInstruction() {
+		return stream(FACTORY.createAddInstruction());
 	}
 
-	public static SubInstruction createSubInstruction() {
-		return FACTORY.createSubInstruction();
+	public static Stream<Instruction> createSubInstruction() {
+		return stream(FACTORY.createSubInstruction());
 	}
 
-	public static MulInstruction createMulInstruction() {
-		return FACTORY.createMulInstruction();
+	public static Stream<Instruction> createMulInstruction() {
+		return stream(FACTORY.createMulInstruction());
 	}
 
-	public static DivInstruction createDivInstruction() {
-		return FACTORY.createDivInstruction();
+	public static Stream<Instruction> createDivInstruction() {
+		return stream(FACTORY.createDivInstruction());
 	}
 
 	public static LabelInstruction createLabelInstruction(String name) {
@@ -78,45 +71,49 @@ public class MILCreationUtil {
 		return inst;
 	}
 
-	public static JmpInstruction createJmpInstruction(LabelInstruction label) {
+	public static Stream<Instruction> createJmpInstruction(LabelInstruction label) {
 		JmpInstruction inst = FACTORY.createJmpInstruction();
 		inst.setLabel(label);
-		return inst;
+		return stream(inst);
 	}
 
-	public static JpcInstruction createJpcInstruction(LabelInstruction label) {
+	public static Stream<Instruction> createJpcInstruction(LabelInstruction label) {
 		JpcInstruction inst = FACTORY.createJpcInstruction();
 		inst.setLabel(label);
-		return inst;
+		return stream(inst);
 	}
 
-	public static EqInstruction createEqInstruction() {
-		return FACTORY.createEqInstruction();
+	public static Stream<Instruction> createEqInstruction() {
+		return stream(FACTORY.createEqInstruction());
 	}
 
-	public static NeqInstruction createNeqInstruction() {
-		return FACTORY.createNeqInstruction();
+	public static Stream<Instruction> createNeqInstruction() {
+		return stream(FACTORY.createNeqInstruction());
 	}
 
-	public static LtInstruction createLtInstruction() {
-		return FACTORY.createLtInstruction();
+	public static Stream<Instruction> createLtInstruction() {
+		return stream(FACTORY.createLtInstruction());
 	}
 
-	public static GtInstruction createGtInstruction() {
-		return FACTORY.createGtInstruction();
+	public static Stream<Instruction> createGtInstruction() {
+		return stream(FACTORY.createGtInstruction());
 	}
 
-	public static LeqInstruction createLeqInstruction() {
-		return FACTORY.createLeqInstruction();
+	public static Stream<Instruction> createLeqInstruction() {
+		return stream(FACTORY.createLeqInstruction());
 	}
 
-	public static GeqInstruction createGeqInstruction() {
-		return FACTORY.createGeqInstruction();
+	public static Stream<Instruction> createGeqInstruction() {
+		return stream(FACTORY.createGeqInstruction());
 	}
 
-	public static PrtInstruction createPrint(String message) {
+	public static Stream<Instruction> createPrint(String message) {
 		PrtInstruction inst = FACTORY.createPrtInstruction();
 		inst.setValue(message);
-		return inst;
+		return stream(inst);
+	}
+
+	private static Stream<Instruction> stream(Instruction inst) {
+		return Stream.of(inst);
 	}
 }
