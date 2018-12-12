@@ -57,6 +57,7 @@ import edu.mdsd.mpl.mpl.SubtractExpression;
 import edu.mdsd.mpl.mpl.Variable;
 import edu.mdsd.mpl.mpl.VariableDeclaration;
 import edu.mdsd.mpl.mpl.VariableReference;
+import edu.mdsd.mpl.mpl.While;
 
 public class MPL2MILCompiler {
 	public void compileAndSave(Resource resource) {
@@ -181,6 +182,8 @@ public class MPL2MILCompiler {
 			return compile((If) form);
 		case MPLPackage.FOR:
 			return compile((For) form);
+		case MPLPackage.WHILE:
+			return compile((While) form);
 		}
 		return unsupported(form);
 	}
@@ -253,6 +256,13 @@ public class MPL2MILCompiler {
 		String var = loop.getFrom().getLeftHandSide().getVariable().getName();
 		Stream<Instruction> operation = loop.getDownwards() ? createSubInstruction() : createAddInstruction();
 		return stream(createLoadInstruction(var), createLoadInstruction(1), operation, createStoreInstruction(var));
+	}
+
+	private Stream<Instruction> compile(While loop) {
+		LabelInstruction whileLabel = createLabelInstruction("while_" + getSeed(loop));
+		LabelInstruction endLabel = createLabelInstruction("endwhile_" + getSeed(loop));
+		return stream(stream(whileLabel), compile(loop.getCondition()), createJpcInstruction(endLabel),
+				compile(loop.getBody()), createJmpInstruction(whileLabel), stream(endLabel));
 	}
 
 	private Stream<Instruction> compileOperation(Operation operation) {
