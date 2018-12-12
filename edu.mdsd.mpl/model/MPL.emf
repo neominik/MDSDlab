@@ -9,7 +9,7 @@ class MPLModel {
 abstract class FunctionalUnit {
   attr String[1] name;
   val VariableDeclaration[*] variableDeclarations;
-  val Block body;
+  val Block[1] body;
 }
 
 class Program extends FunctionalUnit {

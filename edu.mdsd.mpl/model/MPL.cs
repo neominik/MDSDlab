@@ -6,6 +6,7 @@ OPTIONS {
 	reloadGeneratorModel = "true";
 	defaultTokenName = "IDENTIFIER_TOKEN";
 	usePredefinedTokens = "false";
+	overrideBuilder = "false";
 }
 
 TOKENS {
@@ -28,7 +29,7 @@ TOKENSTYLES {
 RULES {
 	MPLModel ::= program (operations)*;
 	
-	Program ::= "Program" #1 name[] (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? (body)? "End" ".";
+	Program ::= "Program" #1 name[] (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? body "End" ".";
 	
 	VariableDeclaration ::= variable (":=" initialValue)?;
 	Variable ::= name[];
@@ -36,9 +37,9 @@ RULES {
 	Block ::= (!1 statements)*;
 	Statement ::= form ".";
 	
-	Function ::= "Function" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? (body)? "End" ".";
+	Function ::= "Function" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? body "End" ".";
 	
-	Procedure ::= "Procedure" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? (body)? "End" ".";
+	Procedure ::= "Procedure" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? body "End" ".";
 	
 	Return ::= "Return" (value)?;
 	
