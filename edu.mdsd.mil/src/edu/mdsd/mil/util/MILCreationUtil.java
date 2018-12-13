@@ -2,6 +2,7 @@ package edu.mdsd.mil.util;
 
 import java.util.stream.Stream;
 
+import edu.mdsd.mil.CalInstruction;
 import edu.mdsd.mil.ConstantInteger;
 import edu.mdsd.mil.Instruction;
 import edu.mdsd.mil.JmpInstruction;
@@ -115,6 +116,16 @@ public class MILCreationUtil {
 
 	public static Stream<Instruction> createYield() {
 		return stream(FACTORY.createYldInstruction());
+	}
+
+	public static Stream<Instruction> createCall(LabelInstruction label) {
+		CalInstruction inst = FACTORY.createCalInstruction();
+		inst.setLabel(label);
+		return stream(inst);
+	}
+
+	public static Stream<Instruction> createReturn() {
+		return stream(FACTORY.createRetInstruction());
 	}
 
 	private static Stream<Instruction> stream(Instruction inst) {

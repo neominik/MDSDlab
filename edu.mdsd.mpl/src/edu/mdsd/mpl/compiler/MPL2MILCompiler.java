@@ -1,6 +1,7 @@
 package edu.mdsd.mpl.compiler;
 
 import static edu.mdsd.mil.util.MILCreationUtil.createAddInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createCall;
 import static edu.mdsd.mil.util.MILCreationUtil.createDivInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createEqInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createGeqInstruction;
@@ -15,12 +16,14 @@ import static edu.mdsd.mil.util.MILCreationUtil.createMILModel;
 import static edu.mdsd.mil.util.MILCreationUtil.createMulInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createNeqInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createPrint;
+import static edu.mdsd.mil.util.MILCreationUtil.createReturn;
 import static edu.mdsd.mil.util.MILCreationUtil.createStoreInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createSubInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createYield;
 import static edu.mdsd.mpl.compiler.StreamUtil.stream;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +36,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import edu.mdsd.mil.Instruction;
 import edu.mdsd.mil.LabelInstruction;
 import edu.mdsd.mil.MILModel;
+import edu.mdsd.mil.util.MILCreationUtil;
 import edu.mdsd.mpl.mpl.AddExpression;
 import edu.mdsd.mpl.mpl.ArithmeticExpression;
 import edu.mdsd.mpl.mpl.Assignment;
@@ -44,6 +48,7 @@ import edu.mdsd.mpl.mpl.Expression;
 import edu.mdsd.mpl.mpl.ExpressionStatement;
 import edu.mdsd.mpl.mpl.For;
 import edu.mdsd.mpl.mpl.Form;
+import edu.mdsd.mpl.mpl.FunctionalUnit;
 import edu.mdsd.mpl.mpl.If;
 import edu.mdsd.mpl.mpl.LiteralValue;
 import edu.mdsd.mpl.mpl.MPLModel;
@@ -51,8 +56,10 @@ import edu.mdsd.mpl.mpl.MPLPackage;
 import edu.mdsd.mpl.mpl.MultiplyExpression;
 import edu.mdsd.mpl.mpl.NegateExpression;
 import edu.mdsd.mpl.mpl.Operation;
+import edu.mdsd.mpl.mpl.OperationExpression;
 import edu.mdsd.mpl.mpl.ParenExpression;
-import edu.mdsd.mpl.mpl.Program;
+import edu.mdsd.mpl.mpl.Procedure;
+import edu.mdsd.mpl.mpl.Return;
 import edu.mdsd.mpl.mpl.Statement;
 import edu.mdsd.mpl.mpl.SubtractExpression;
 import edu.mdsd.mpl.mpl.TraceCall;
@@ -94,15 +101,16 @@ public class MPL2MILCompiler {
 	}
 
 	private Stream<Instruction> compileMPLModel(MPLModel model) {
-		Stream<Instruction> compiledProgram = compileProgram(model.getProgram());
+		Stream<Instruction> compiledProgram = compileFunctionalUnit(model.getProgram());
 		Stream<Instruction> compiledOperations = model.getOperations().stream().flatMap(this::compileOperation);
-		return stream(compiledProgram, compiledOperations);
+		LabelInstruction endLabel = createLabelInstruction("terminate_" + getSeed(model));
+		return stream(compiledProgram, createJmpInstruction(endLabel), compiledOperations, stream(endLabel));
 	}
 
-	private Stream<Instruction> compileProgram(Program program) {
-		Stream<Instruction> compiledVarDecls = program.getVariableDeclarations().stream()
+	private Stream<Instruction> compileFunctionalUnit(FunctionalUnit unit) {
+		Stream<Instruction> compiledVarDecls = unit.getVariableDeclarations().stream()
 				.flatMap(this::compileVariableDeclaration);
-		Stream<Instruction> compiledStatements = program.getBody().getStatements().stream().flatMap(this::compile);
+		Stream<Instruction> compiledStatements = unit.getBody().getStatements().stream().flatMap(this::compile);
 		return stream(compiledVarDecls, compiledStatements);
 	}
 
@@ -129,6 +137,8 @@ public class MPL2MILCompiler {
 			return compile((NegateExpression) expression);
 		case MPLPackage.PAREN_EXPRESSION:
 			return compile((ParenExpression) expression);
+		case MPLPackage.OPERATION_EXPRESSION:
+			return compile((OperationExpression) expression);
 		}
 		return unsupported(expression);
 	}
@@ -169,6 +179,11 @@ public class MPL2MILCompiler {
 		return compile(par.getOperand());
 	}
 
+	private Stream<Instruction> compile(OperationExpression exp) {
+		return stream(exp.getParameterValues().stream().flatMap(this::compile),
+				createCall(createLabelInstruction(exp.getOperation().getName())));
+	}
+
 	private Stream<Instruction> compile(Variable variable) {
 		return createStoreInstruction(variable.getName());
 	}
@@ -188,6 +203,8 @@ public class MPL2MILCompiler {
 			return compile((While) form);
 		case MPLPackage.TRACE_CALL:
 			return compile((TraceCall) form);
+		case MPLPackage.RETURN:
+			return compile((Return) form);
 		}
 		return unsupported(form);
 	}
@@ -197,7 +214,13 @@ public class MPL2MILCompiler {
 	}
 
 	private Stream<Instruction> compile(ExpressionStatement statement) {
-		return stream(compile(statement.getExpression()), createStoreInstruction());
+		Expression exp = statement.getExpression();
+		boolean noReturnValue = false;
+		if (exp instanceof OperationExpression) {
+			OperationExpression opExp = (OperationExpression) exp;
+			noReturnValue = opExp.getOperation() instanceof Procedure;
+		}
+		return stream(compile(statement.getExpression()), noReturnValue ? stream() : createStoreInstruction());
 	}
 
 	private Stream<Instruction> compile(If ifForm) {
@@ -274,8 +297,16 @@ public class MPL2MILCompiler {
 		return stream(createPrint("trace " + var + ": "), createLoadInstruction(var), createYield());
 	}
 
+	private Stream<Instruction> compile(Return ret) {
+		return stream(Stream.ofNullable(ret.getValue()).flatMap(this::compile), createReturn());
+	}
+
 	private Stream<Instruction> compileOperation(Operation operation) {
-		return unsupported(operation);
+		List<Variable> reverseParams = new ArrayList<>(operation.getParameters());
+		Collections.reverse(reverseParams);
+		Stream<Instruction> stores = reverseParams.stream().map(Variable::getName)
+				.flatMap(MILCreationUtil::createStoreInstruction);
+		return stream(stream(createLabelInstruction(operation.getName())), stores, compileFunctionalUnit(operation));
 	}
 
 	private Stream<Instruction> unsupported(Object o) {
