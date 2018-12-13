@@ -17,6 +17,7 @@ import static edu.mdsd.mil.util.MILCreationUtil.createNeqInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createPrint;
 import static edu.mdsd.mil.util.MILCreationUtil.createStoreInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createSubInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createYield;
 import static edu.mdsd.mpl.compiler.StreamUtil.stream;
 
 import java.io.IOException;
@@ -54,6 +55,7 @@ import edu.mdsd.mpl.mpl.ParenExpression;
 import edu.mdsd.mpl.mpl.Program;
 import edu.mdsd.mpl.mpl.Statement;
 import edu.mdsd.mpl.mpl.SubtractExpression;
+import edu.mdsd.mpl.mpl.TraceCall;
 import edu.mdsd.mpl.mpl.Variable;
 import edu.mdsd.mpl.mpl.VariableDeclaration;
 import edu.mdsd.mpl.mpl.VariableReference;
@@ -184,6 +186,8 @@ public class MPL2MILCompiler {
 			return compile((For) form);
 		case MPLPackage.WHILE:
 			return compile((While) form);
+		case MPLPackage.TRACE_CALL:
+			return compile((TraceCall) form);
 		}
 		return unsupported(form);
 	}
@@ -263,6 +267,11 @@ public class MPL2MILCompiler {
 		LabelInstruction endLabel = createLabelInstruction("endwhile_" + getSeed(loop));
 		return stream(stream(whileLabel), compile(loop.getCondition()), createJpcInstruction(endLabel),
 				compile(loop.getBody()), createJmpInstruction(whileLabel), stream(endLabel));
+	}
+
+	private Stream<Instruction> compile(TraceCall trace) {
+		String var = trace.getVariable().getVariable().getName();
+		return stream(createPrint("trace " + var + ": "), createLoadInstruction(var), createYield());
 	}
 
 	private Stream<Instruction> compileOperation(Operation operation) {

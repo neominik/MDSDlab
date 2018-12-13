@@ -113,6 +113,10 @@ public class MILCreationUtil {
 		return stream(inst);
 	}
 
+	public static Stream<Instruction> createYield() {
+		return stream(FACTORY.createYldInstruction());
+	}
+
 	private static Stream<Instruction> stream(Instruction inst) {
 		return Stream.of(inst);
 	}
