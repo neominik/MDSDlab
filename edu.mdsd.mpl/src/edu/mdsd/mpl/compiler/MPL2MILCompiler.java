@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,7 +59,6 @@ import edu.mdsd.mpl.mpl.NegateExpression;
 import edu.mdsd.mpl.mpl.Operation;
 import edu.mdsd.mpl.mpl.OperationExpression;
 import edu.mdsd.mpl.mpl.ParenExpression;
-import edu.mdsd.mpl.mpl.Procedure;
 import edu.mdsd.mpl.mpl.Return;
 import edu.mdsd.mpl.mpl.Statement;
 import edu.mdsd.mpl.mpl.SubtractExpression;
@@ -214,13 +214,7 @@ public class MPL2MILCompiler {
 	}
 
 	private Stream<Instruction> compile(ExpressionStatement statement) {
-		Expression exp = statement.getExpression();
-		boolean noReturnValue = false;
-		if (exp instanceof OperationExpression) {
-			OperationExpression opExp = (OperationExpression) exp;
-			noReturnValue = opExp.getOperation() instanceof Procedure;
-		}
-		return stream(compile(statement.getExpression()), noReturnValue ? stream() : createStoreInstruction());
+		return stream(compile(statement.getExpression()), createStoreInstruction());
 	}
 
 	private Stream<Instruction> compile(If ifForm) {
@@ -298,7 +292,9 @@ public class MPL2MILCompiler {
 	}
 
 	private Stream<Instruction> compile(Return ret) {
-		return stream(Stream.ofNullable(ret.getValue()).flatMap(this::compile), createReturn());
+		Stream<Instruction> value = Optional.ofNullable(ret.getValue()).map(this::compile)
+				.orElseGet(() -> createLoadInstruction(0));
+		return stream(value, createReturn());
 	}
 
 	private Stream<Instruction> compileOperation(Operation operation) {
