@@ -115,6 +115,19 @@ tags
 # Persistent undo
 [._]*.un~
 
+### Clojure ###
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+/lib/
+/classes/
+/target/
+/checkouts/
+.cpcache/
+.rebel_readline_history
+.rebl/
+symbolic-execution/mil/
 
 # End of https://www.gitignore.io/api/vim,java,eclipse
 /org.emftext.commons.antlr3_4_0/

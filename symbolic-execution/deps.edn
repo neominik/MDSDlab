@@ -1,0 +1,5 @@
+{:deps {}
+ :aliases
+ {:rebl {:extra-deps {org.clojure/core.async {:mvn/version "0.4.490"}
+                      com.cognitect/rebl {:local/root "/Users/dominik/bin/rebl/REBL-0.9.109.jar"}}
+         :main-opts ["-m" "cognitect.rebl"]}}}
