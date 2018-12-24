@@ -37,6 +37,8 @@
 (defmethod step 'ret [_ [pc [frame & mem] stack cs]] [[(:ret frame) (vec mem) stack cs]])
 (defmethod step 'prt [_ [pc mem stack cs]] [[(inc pc) mem stack cs]])
 (defmethod step 'lbl [_ [pc mem stack cs]] [[(inc pc) mem stack cs]])
+(defmethod step 'inp [_ [pc mem stack cs]]
+  [[(inc pc) mem (vec (cons (with-meta (gensym) {:symbolic true}) stack)) cs]])
 
 (defn run-sym [max-depth prog [pc _ _ cs :as state]]
   (let [done? (and (>= pc (count prog)) (pos? max-depth))
