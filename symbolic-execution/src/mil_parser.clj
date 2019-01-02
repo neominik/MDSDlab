@@ -17,7 +17,7 @@
 
 (defn concrete-jumps [prog addrs]
   (map (fn [[jmp a :as inst]]
-         (if (#{'jmp 'jpc 'lbl 'cal} jmp) (list jmp (addrs a)) inst))
+         (if (#{'jmp 'jpc 'lbl 'cal} jmp) (with-meta (list jmp (addrs a)) {:label a}) inst))
        prog))
 
 (defn parse [file]
