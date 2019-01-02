@@ -1,5 +1,12 @@
-{:deps {}
- :aliases
- {:rebl {:extra-deps {org.clojure/core.async {:mvn/version "0.4.490"}
-                      com.cognitect/rebl {:local/root "/Users/dominik/bin/rebl/REBL-0.9.109.jar"}}
-         :main-opts ["-m" "cognitect.rebl"]}}}
+{:deps {org.clojure/core.async {:mvn/version "0.4.490"}
+        com.cognitect/rebl {:local/root "/Users/dominik/bin/rebl/REBL-0.9.109.jar"}
+        com.bhauman/rebel-readline {:mvn/version "0.1.4"}
+        org.openjfx/javafx-fxml {:local/root "/Users/dominik/bin/javafx-sdk-11.0.1/lib/javafx.fxml.jar"}
+        org.openjfx/javafx-controls {:local/root "/Users/dominik/bin/javafx-sdk-11.0.1/lib/javafx.controls.jar"}
+        org.openjfx/javafx-swing {:local/root "/Users/dominik/bin/javafx-sdk-11.0.1/lib/javafx.swing.jar"}
+        org.openjfx/javafx-base {:local/root "/Users/dominik/bin/javafx-sdk-11.0.1/lib/javafx.base.jar"}
+        org.openjfx/javafx-media {:local/root "/Users/dominik/bin/javafx-sdk-11.0.1/lib/javafx.media.jar"}
+        org.openjfx/javafx-graphics {:local/root "/Users/dominik/bin/javafx-sdk-11.0.1/lib/javafx.graphics.jar"}
+        org.openjfx/javafx-web {:local/root "/Users/dominik/bin/javafx-sdk-11.0.1/lib/javafx.web.jar"}}
+ :jvm-opts ["--module-path" "/Users/dominik/bin/javafx-sdk-11.0.1/lib" "--add-modules=javafx.web,javafx.fxml,javafx.swing,javafx.base,javafx.media,javafx.graphics,javafx.controls"]
+ :main-opts ["-m" "user"]}
