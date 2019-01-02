@@ -29,6 +29,7 @@ TOKENSTYLES {
 RULES {
 	MPLModel ::= program (operations)*;
 	
+	@SuppressWarnings(featureWithoutSyntax)
 	Program ::= "Program" #1 name[] (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? body "End" ".";
 	
 	VariableDeclaration ::= variable (":=" initialValue)?;
@@ -37,9 +38,9 @@ RULES {
 	Block ::= (!1 statements)*;
 	Statement ::= form ".";
 	
-	Function ::= "Function" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? body "End" ".";
+	Function ::= "Function" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? !1 (!1 "Pre" !1 preconditions ("," #1 preconditions)* ".")? body (!1 "Post" !1 postconditions ("," #1 postconditions)* ".")? "End" ".";
 	
-	Procedure ::= "Procedure" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? body "End" ".";
+	Procedure ::= "Procedure" name[] "(" (parameters ("," parameters)*)? ")" (!1 "Variables" !1 variableDeclarations ("," #1 variableDeclarations)* ".")? !1 (!1 "Pre" !1 preconditions ("," #1 preconditions)* ".")? body (!1 "Post" !1 postconditions ("," #1 postconditions)* ".")? "End" ".";
 	
 	Return ::= "Return" (value)?;
 	
@@ -71,6 +72,9 @@ RULES {
 	
 	@Operator(type="primitive", weight="5", superclass="Expression")
 	ParenExpression ::= "(" operand ")";
+	
+	@Operator(type="primitive", weight="5", superclass="Expression")
+	InputExpression ::= "Input" ("(" lowerBound "," upperBound ")")?;
 	
 	Assignment ::= leftHandSide #1 ":=" #1 rightHandSide;
 	

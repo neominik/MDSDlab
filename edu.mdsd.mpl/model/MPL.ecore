@@ -9,6 +9,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FunctionalUnit" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="preconditions" upperBound="-1"
+        eType="#//Comparison" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="postconditions" upperBound="-1"
+        eType="#//Comparison" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variableDeclarations" upperBound="-1"
         eType="#//VariableDeclaration" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Block"
@@ -70,6 +74,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NegateExpression" eSuperTypes="#//UnaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParenExpression" eSuperTypes="#//UnaryExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InputExpression" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerBound" eType="#//LiteralValue"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="upperBound" eType="#//LiteralValue"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Comparison">
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftHandSide" lowerBound="1"
         eType="#//Expression" containment="true"/>

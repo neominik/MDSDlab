@@ -8,6 +8,8 @@ class MPLModel {
 
 abstract class FunctionalUnit {
   attr String[1] name;
+  val Comparison[*] preconditions;
+  val Comparison[*] postconditions;
   val VariableDeclaration[*] variableDeclarations;
   val Block[1] body;
 }
@@ -83,6 +85,11 @@ class NegateExpression extends UnaryExpression {
 }
 
 class ParenExpression extends UnaryExpression {
+}
+
+class InputExpression extends Expression {
+  val LiteralValue lowerBound;
+  val LiteralValue upperBound;
 }
 
 class Comparison {
