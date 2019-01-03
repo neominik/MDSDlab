@@ -1,12 +1,13 @@
 package edu.mdsd.mpl.compiler;
 
-import static edu.mdsd.mil.util.MILCreationUtil.*;
+import static edu.mdsd.mil.util.MILCreationUtil.createAddInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createCall;
 import static edu.mdsd.mil.util.MILCreationUtil.createDivInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createEqInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createErr;
 import static edu.mdsd.mil.util.MILCreationUtil.createGeqInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createGtInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createInputInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createJmpInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createJpcInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createLabelInstruction;
@@ -15,6 +16,7 @@ import static edu.mdsd.mil.util.MILCreationUtil.createLoadInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createLtInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createMILModel;
 import static edu.mdsd.mil.util.MILCreationUtil.createMulInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createNegInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createNeqInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createPrint;
 import static edu.mdsd.mil.util.MILCreationUtil.createReturn;
@@ -335,7 +337,8 @@ public class MPL2MILCompiler {
 
 	private Stream<Instruction> compileCondition(Comparison comparison) {
 		LabelInstruction label = createLabelInstruction("assertion_" + getSeed(comparison));
-		return stream(compile(comparison), createJpcInstruction(label), createErr("Assertion failed."), stream(label));
+		return stream(compile(comparison), createNegInstruction(), createJpcInstruction(label),
+				createErr("Assertion " + getSeed(comparison) + " failed.\n"), stream(label));
 	}
 
 	private Stream<Instruction> unsupported(Object o) {

@@ -140,6 +140,10 @@ public class MILCreationUtil {
 		return stream(FACTORY.createYldInstruction());
 	}
 
+	public static Stream<Instruction> createNegInstruction() {
+		return stream(FACTORY.createNegInstruction());
+	}
+
 	public static Stream<Instruction> createCall(LabelInstruction label) {
 		CalInstruction inst = FACTORY.createCalInstruction();
 		inst.setLabel(label);
