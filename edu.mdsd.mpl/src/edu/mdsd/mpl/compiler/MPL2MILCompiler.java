@@ -112,7 +112,8 @@ public class MPL2MILCompiler {
 	private Stream<Instruction> compileFunctionalUnit(FunctionalUnit unit) {
 		Stream<Instruction> compiledVarDecls = unit.getVariableDeclarations().stream()
 				.flatMap(this::compileVariableDeclaration);
-		Stream<Instruction> compiledStatements = unit.getBody().getStatements().stream().flatMap(this::compile);
+		Stream<Instruction> compiledStatements = Optional.ofNullable(unit.getBody())
+				.map(b -> b.getStatements().stream().flatMap(this::compile)).orElse(stream());
 		return stream(compiledVarDecls, compiledStatements);
 	}
 
