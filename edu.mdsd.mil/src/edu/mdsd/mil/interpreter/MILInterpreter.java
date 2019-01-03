@@ -16,6 +16,7 @@ import java.util.function.IntUnaryOperator;
 
 import edu.mdsd.mil.CalInstruction;
 import edu.mdsd.mil.ConstantInteger;
+import edu.mdsd.mil.ErrInstruction;
 import edu.mdsd.mil.InpInstruction;
 import edu.mdsd.mil.Instruction;
 import edu.mdsd.mil.JpcInstruction;
@@ -107,6 +108,9 @@ public class MILInterpreter {
 			break;
 		case MILPackage.PRT_INSTRUCTION:
 			interpret((PrtInstruction) instruction);
+			break;
+		case MILPackage.ERR_INSTRUCTION:
+			interpret((ErrInstruction) instruction);
 			break;
 		case MILPackage.EQ_INSTRUCTION:
 			interpretBinaryOperator((a, b) -> a == b ? 1 : 0);
@@ -209,6 +213,12 @@ public class MILInterpreter {
 	private void interpret(PrtInstruction instruction) {
 		String text = instruction.getValue();
 		print(text);
+	}
+
+	private void interpret(ErrInstruction instruction) {
+		String text = instruction.getValue();
+		print(text);
+		throw new AssertionError(text);
 	}
 
 	private int popFromOperandStack() {
