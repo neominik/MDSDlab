@@ -1,5 +1,9 @@
 package edu.mdsd.mil.interpreter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +16,7 @@ import java.util.function.IntUnaryOperator;
 
 import edu.mdsd.mil.CalInstruction;
 import edu.mdsd.mil.ConstantInteger;
+import edu.mdsd.mil.InpInstruction;
 import edu.mdsd.mil.Instruction;
 import edu.mdsd.mil.JpcInstruction;
 import edu.mdsd.mil.JumpInstruction;
@@ -33,9 +38,11 @@ public class MILInterpreter {
 	private List<Instruction> instructions;
 
 	private PrintStream out;
+	private InputStream in;
 
-	public MILInterpreter(PrintStream out) {
+	public MILInterpreter(PrintStream out, InputStream in) {
 		this.out = out;
+		this.in = in;
 		callStack.push(new StackFrame(0));
 	}
 
@@ -74,6 +81,9 @@ public class MILInterpreter {
 			break;
 		case MILPackage.STORE_INSTRUCTION:
 			interpret((StoreInstruction) instruction);
+			break;
+		case MILPackage.INP_INSTRUCTION:
+			interpret((InpInstruction) instruction);
 			break;
 		case MILPackage.NEG_INSTRUCTION:
 			interpretUnaryOperator(i -> i == 0 ? 1 : 0);
@@ -148,6 +158,30 @@ public class MILInterpreter {
 	private void interpret(StoreInstruction instruction) {
 		interpretConsumer(v -> Optional.ofNullable(instruction.getRegisterReference())
 				.map(RegisterReference::getAddress).ifPresent(address -> setRegisterValue(address, v)));
+	}
+
+	private void interpret(InpInstruction instruction) {
+		while (true) {
+			String range = "[" + instruction.getLowerBound().getRawValue() + ", "
+					+ instruction.getUpperBound().getRawValue() + "]";
+			print("Please enter a valid int in range " + range + ":\n");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			try {
+				int input = Integer.parseInt(reader.readLine());
+				if (outOfRange(input, instruction))
+					throw new NumberFormatException(input + " is not within range " + range);
+				pushOnOperandStack(input);
+				break;
+			} catch (NumberFormatException e) {
+				print(e + "\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private boolean outOfRange(int input, InpInstruction instruction) {
+		return input < instruction.getLowerBound().getRawValue() || input > instruction.getUpperBound().getRawValue();
 	}
 
 	private void interpret(JumpInstruction instruction) {

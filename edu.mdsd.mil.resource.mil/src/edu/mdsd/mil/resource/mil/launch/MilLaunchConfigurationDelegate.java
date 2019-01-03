@@ -6,6 +6,7 @@
  */
 package edu.mdsd.mil.resource.mil.launch;
 
+import java.io.InputStream;
 import java.io.PrintStream;
 
 import org.eclipse.core.runtime.CoreException;
@@ -37,7 +38,8 @@ public class MilLaunchConfigurationDelegate extends LaunchConfigurationDelegate 
 		MILModel model = (MILModel) helper.getModelRoot(configuration);
 		IOConsole console = findConsole("Interpreter");
 		PrintStream out = new PrintStream(console.newOutputStream());
-		new MILInterpreter(out).interpretAndPrintResult(model);
+		InputStream in = console.getInputStream();
+		new MILInterpreter(out, in).interpretAndPrintResult(model);
 		out.close();
 	}
 
