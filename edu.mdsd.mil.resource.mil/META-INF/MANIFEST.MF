@@ -14,9 +14,9 @@ Require-Bundle: org.eclipse.core.runtime;resolution:=optional,
  org.emftext.commons.antlr3_4_0,
  edu.mdsd.mil,
  org.eclipse.ui.console,
- org.eclipse.ui
+ org.eclipse.jface
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: edu.mdsd.mil.resource.mil,
   edu.mdsd.mil.resource.mil.analysis,
   edu.mdsd.mil.resource.mil.mopp,
