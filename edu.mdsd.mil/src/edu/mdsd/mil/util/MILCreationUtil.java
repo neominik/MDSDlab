@@ -4,6 +4,7 @@ import java.util.stream.Stream;
 
 import edu.mdsd.mil.CalInstruction;
 import edu.mdsd.mil.ConstantInteger;
+import edu.mdsd.mil.InpInstruction;
 import edu.mdsd.mil.Instruction;
 import edu.mdsd.mil.JmpInstruction;
 import edu.mdsd.mil.JpcInstruction;
@@ -24,10 +25,14 @@ public class MILCreationUtil {
 
 	public static Stream<Instruction> createLoadInstruction(int value) {
 		LoadInstruction inst = FACTORY.createLoadInstruction();
+		inst.setValue(constInt(value));
+		return stream(inst);
+	}
+
+	private static ConstantInteger constInt(int value) {
 		ConstantInteger val = FACTORY.createConstantInteger();
 		val.setRawValue(value);
-		inst.setValue(val);
-		return stream(inst);
+		return val;
 	}
 
 	public static Stream<Instruction> createLoadInstruction(String name) {
@@ -36,6 +41,17 @@ public class MILCreationUtil {
 		val.setAddress(name);
 		inst.setValue(val);
 		return stream(inst);
+	}
+
+	public static Stream<Instruction> createInputInstruction(int lower, int upper) {
+		InpInstruction inst = FACTORY.createInpInstruction();
+		inst.setLowerBound(constInt(lower));
+		inst.setUpperBound(constInt(upper));
+		return stream(inst);
+	}
+
+	public static Stream<Instruction> createInputInstruction() {
+		return stream(FACTORY.createInpInstruction());
 	}
 
 	public static Stream<Instruction> createStoreInstruction(String addr) {

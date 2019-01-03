@@ -1,6 +1,6 @@
 package edu.mdsd.mpl.compiler;
 
-import static edu.mdsd.mil.util.MILCreationUtil.createAddInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.*;
 import static edu.mdsd.mil.util.MILCreationUtil.createCall;
 import static edu.mdsd.mil.util.MILCreationUtil.createDivInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createEqInstruction;
@@ -53,6 +53,7 @@ import edu.mdsd.mpl.mpl.For;
 import edu.mdsd.mpl.mpl.Form;
 import edu.mdsd.mpl.mpl.FunctionalUnit;
 import edu.mdsd.mpl.mpl.If;
+import edu.mdsd.mpl.mpl.InputExpression;
 import edu.mdsd.mpl.mpl.LiteralValue;
 import edu.mdsd.mpl.mpl.MPLModel;
 import edu.mdsd.mpl.mpl.MPLPackage;
@@ -142,6 +143,8 @@ public class MPL2MILCompiler {
 			return compile((ParenExpression) expression);
 		case MPLPackage.OPERATION_EXPRESSION:
 			return compile((OperationExpression) expression);
+		case MPLPackage.INPUT_EXPRESSION:
+			return compile((InputExpression) expression);
 		}
 		return unsupported(expression);
 	}
@@ -185,6 +188,12 @@ public class MPL2MILCompiler {
 	private Stream<Instruction> compile(OperationExpression exp) {
 		return stream(exp.getParameterValues().stream().flatMap(this::compile),
 				createCall(createLabelInstruction(exp.getOperation().getName())));
+	}
+
+	private Stream<Instruction> compile(InputExpression exp) {
+		if (exp.getLowerBound() != null && exp.getUpperBound() != null)
+			return createInputInstruction(exp.getLowerBound().getRawValue(), exp.getUpperBound().getRawValue());
+		return createInputInstruction();
 	}
 
 	private Stream<Instruction> compile(Variable variable) {
