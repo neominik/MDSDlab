@@ -9,10 +9,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FunctionalUnit" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="preconditions" upperBound="-1"
-        eType="#//Comparison" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="postconditions" upperBound="-1"
-        eType="#//Comparison" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variableDeclarations" upperBound="-1"
         eType="#//VariableDeclaration" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Block"
@@ -122,6 +118,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="Operation" abstract="true" eSuperTypes="#//FunctionalUnit">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//Variable" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="preconditions" upperBound="-1"
+        eType="#//Comparison" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="postconditions" upperBound="-1"
+        eType="#//Comparison" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//Operation"/>
   <eClassifiers xsi:type="ecore:EClass" name="Procedure" eSuperTypes="#//Operation"/>

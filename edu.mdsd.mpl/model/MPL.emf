@@ -8,8 +8,6 @@ class MPLModel {
 
 abstract class FunctionalUnit {
   attr String[1] name;
-  val Comparison[*] preconditions;
-  val Comparison[*] postconditions;
   val VariableDeclaration[*] variableDeclarations;
   val Block[1] body;
 }
@@ -141,6 +139,8 @@ class For extends Loop {
 
 abstract class Operation extends FunctionalUnit {
   val Variable[*] parameters;
+  val Comparison[*] preconditions;
+  val Comparison[*] postconditions;
 }
 
 class Function extends Operation {
