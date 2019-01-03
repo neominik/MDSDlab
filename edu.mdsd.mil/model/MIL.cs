@@ -33,6 +33,7 @@ RULES {
 	
 	LoadInstruction ::= "lod" #1 value;
 	StoreInstruction ::= "sto" #1 registerReference?;
+	InpInstruction ::= "inp" #1 (lowerBound upperBound)?;
 	
 	AddInstruction ::= "add";
 	SubInstruction ::= "sub";
@@ -56,6 +57,7 @@ RULES {
 	
 	YldInstruction ::= "yld";
 	PrtInstruction ::= "prt" #1 value[STRING_TOKEN];
+	ErrInstruction ::= "err" #1 value[STRING_TOKEN];
 	
 	ConstantInteger ::= rawValue[INTEGER_TOKEN];
 	RegisterReference ::= address[];	

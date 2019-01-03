@@ -43,6 +43,11 @@
     <genClasses ecoreClass="MIL.ecore#//PrtInstruction">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIL.ecore#//PrtInstruction/value"/>
     </genClasses>
+    <genClasses ecoreClass="MIL.ecore#//InpInstruction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MIL.ecore#//InpInstruction/lowerBound"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MIL.ecore#//InpInstruction/upperBound"/>
+    </genClasses>
+    <genClasses ecoreClass="MIL.ecore#//ErrInstruction"/>
     <genClasses image="false" ecoreClass="MIL.ecore#//Value"/>
     <genClasses ecoreClass="MIL.ecore#//ConstantInteger">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MIL.ecore#//ConstantInteger/rawValue"/>

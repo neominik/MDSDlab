@@ -39,6 +39,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="PrtInstruction" eSuperTypes="#//Instruction">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InpInstruction" eSuperTypes="#//Instruction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerBound" eType="#//ConstantInteger"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="upperBound" eType="#//ConstantInteger"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ErrInstruction" eSuperTypes="#//PrtInstruction"/>
   <eClassifiers xsi:type="ecore:EClass" name="Value" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ConstantInteger" eSuperTypes="#//Value">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rawValue" lowerBound="1"

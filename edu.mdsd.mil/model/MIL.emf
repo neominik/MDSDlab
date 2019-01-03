@@ -76,6 +76,14 @@ class PrtInstruction extends Instruction {
   attr String[1] value;
 }
 
+class InpInstruction extends Instruction {
+  val ConstantInteger lowerBound;
+  val ConstantInteger upperBound;
+}
+
+class ErrInstruction extends PrtInstruction {
+}
+
 abstract class Value {
 }
 
