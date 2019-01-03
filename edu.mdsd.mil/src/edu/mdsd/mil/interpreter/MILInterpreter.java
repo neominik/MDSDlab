@@ -166,8 +166,9 @@ public class MILInterpreter {
 
 	private void interpret(InpInstruction instruction) {
 		while (true) {
-			String range = "[" + instruction.getLowerBound().getRawValue() + ", "
-					+ instruction.getUpperBound().getRawValue() + "]";
+			String range = "[" + (instruction.getLowerBound() != null && instruction.getUpperBound() != null
+					? instruction.getLowerBound().getRawValue() + ", " + instruction.getUpperBound().getRawValue()
+					: Integer.MIN_VALUE + ", " + Integer.MAX_VALUE) + "]";
 			print("Please enter a valid int in range " + range + ":\n");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 			try {
@@ -185,7 +186,10 @@ public class MILInterpreter {
 	}
 
 	private boolean outOfRange(int input, InpInstruction instruction) {
-		return input < instruction.getLowerBound().getRawValue() || input > instruction.getUpperBound().getRawValue();
+		return input < Optional.ofNullable(instruction.getLowerBound()).map(ConstantInteger::getRawValue)
+				.orElse(Integer.MIN_VALUE)
+				|| input > Optional.ofNullable(instruction.getUpperBound()).map(ConstantInteger::getRawValue)
+						.orElse(Integer.MAX_VALUE);
 	}
 
 	private void interpret(JumpInstruction instruction) {
