@@ -309,8 +309,9 @@ public class MPL2MILCompiler {
 				.flatMap(MILCreationUtil::createStoreInstruction);
 		Stream<Instruction> preconditions = operation.getPreconditions().stream().flatMap(this::compileCondition);
 		Stream<Instruction> postconditions = compilePostconditions(operation.getPostconditions(), operation);
+		Stream<Instruction> ensureReturn = stream(createLoadInstruction(0), createReturn());
 		return stream(stream(createLabelInstruction(operation.getName())), stores, preconditions,
-				compileFunctionalUnit(operation), postconditions); // TODO return if no return as last stmnt
+				compileFunctionalUnit(operation), postconditions, ensureReturn);
 	}
 
 	private Stream<Instruction> compilePostconditions(List<Comparison> postconditions, Operation operation) {
