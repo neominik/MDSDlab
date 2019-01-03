@@ -6,3 +6,6 @@
 (defn -main []
   (rebl/ui) 
   (rl/-main))
+
+(defn reload []
+  (require '[symbolic] :reload-all))

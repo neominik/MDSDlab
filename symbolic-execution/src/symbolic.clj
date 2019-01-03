@@ -41,9 +41,12 @@
 (defmethod step 'cal [[_ addr] {:keys [pc mem stack cs]}] [(State. addr (vec (cons {:ret (inc pc)} mem)) stack cs)])
 (defmethod step 'ret [_ {:keys [pc stack cs] [frame & mem] :mem}] [(State. (:ret frame) (vec mem) stack cs)])
 (defmethod step 'prt [_ state] [(update state :pc inc)])
+(defmethod step 'err [_ state] []) ; TODO add err stream
 (defmethod step 'lbl [_ state] [(update state :pc inc)])
-(defmethod step 'inp [_ {:keys [pc mem stack cs]}]
-  [(State. (inc pc) mem (vec (cons (with-meta (gensym) {:symbolic true}) stack)) cs)])
+(defmethod step 'inp [[_ lower upper] {:keys [pc mem stack cs]}]
+  (let [sym (with-meta (gensym) {:symbolic true})
+        new-cs [(list '<= (or lower Integer/MIN_VALUE) sym (or upper Integer/MAX_VALUE))]]
+    [(State. (inc pc) mem (vec (cons sym stack)) [(solver/simplify (concat new-cs cs))])]))
 
 (defn terminated? [prog {:keys [pc]}] (>= pc (count prog)))
 
@@ -58,4 +61,4 @@
 (defn verify [file]
   (let [program (mil/parse file)
         states (tree-seq #(not (terminated? program %)) (sym-step program) (State. 0 [{}] [] []))]
-    (vec (take 1000 states))))
+    (vec (take 500 states))))
