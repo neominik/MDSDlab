@@ -4,6 +4,7 @@ import static edu.mdsd.mil.util.MILCreationUtil.createAddInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createCall;
 import static edu.mdsd.mil.util.MILCreationUtil.createDivInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createEqInstruction;
+import static edu.mdsd.mil.util.MILCreationUtil.createErr;
 import static edu.mdsd.mil.util.MILCreationUtil.createGeqInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createGtInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createJmpInstruction;
@@ -21,6 +22,7 @@ import static edu.mdsd.mil.util.MILCreationUtil.createStoreInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createSubInstruction;
 import static edu.mdsd.mil.util.MILCreationUtil.createYield;
 import static edu.mdsd.mpl.compiler.StreamUtil.stream;
+import static edu.mdsd.mpl.validation.ConstraintHelper.getParent;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -294,7 +296,10 @@ public class MPL2MILCompiler {
 	private Stream<Instruction> compile(Return ret) {
 		Stream<Instruction> value = Optional.ofNullable(ret.getValue()).map(this::compile)
 				.orElseGet(() -> createLoadInstruction(0));
-		return stream(value, createReturn());
+		Stream<Instruction> jmpOrRet = getParent(ret, Operation.class).filter(o -> !o.getPostconditions().isEmpty())
+				.map(o -> createJmpInstruction(createLabelInstruction("post_" + getSeed(o))))
+				.orElseGet(MILCreationUtil::createReturn);
+		return stream(value, jmpOrRet);
 	}
 
 	private Stream<Instruction> compileOperation(Operation operation) {
@@ -302,7 +307,24 @@ public class MPL2MILCompiler {
 		Collections.reverse(reverseParams);
 		Stream<Instruction> stores = reverseParams.stream().map(Variable::getName)
 				.flatMap(MILCreationUtil::createStoreInstruction);
-		return stream(stream(createLabelInstruction(operation.getName())), stores, compileFunctionalUnit(operation));
+		Stream<Instruction> preconditions = operation.getPreconditions().stream().flatMap(this::compileCondition);
+		Stream<Instruction> postconditions = compilePostconditions(operation.getPostconditions(), operation);
+		return stream(stream(createLabelInstruction(operation.getName())), stores, preconditions,
+				compileFunctionalUnit(operation), postconditions); // TODO return if no return as last stmnt
+	}
+
+	private Stream<Instruction> compilePostconditions(List<Comparison> postconditions, Operation operation) {
+		if (postconditions.isEmpty()) {
+			return stream();
+		} else {
+			return stream(stream(createLabelInstruction("post_" + getSeed(operation))),
+					postconditions.stream().flatMap(this::compileCondition), createReturn());
+		}
+	}
+
+	private Stream<Instruction> compileCondition(Comparison comparison) {
+		LabelInstruction label = createLabelInstruction("assertion_" + getSeed(comparison));
+		return stream(compile(comparison), createJpcInstruction(label), createErr("Assertion failed."), stream(label));
 	}
 
 	private Stream<Instruction> unsupported(Object o) {

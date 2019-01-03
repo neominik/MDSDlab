@@ -114,6 +114,12 @@ public class MILCreationUtil {
 		return stream(inst);
 	}
 
+	public static Stream<Instruction> createErr(String message) {
+		PrtInstruction inst = FACTORY.createErrInstruction();
+		inst.setValue(message);
+		return stream(inst);
+	}
+
 	public static Stream<Instruction> createYield() {
 		return stream(FACTORY.createYldInstruction());
 	}
