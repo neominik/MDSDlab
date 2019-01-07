@@ -21,7 +21,8 @@
        prog))
 
 (defn parse [file]
-  (let [content (slurp file)
+  (let [path (str "/Users/dominik/eclipse/modeling-latest-released/Runtime/MPLExamples/" file)
+        content (slurp path)
         lines (s/split content #"\n")
         parsed (vec (map parse-line lines))
         addrs (concrete-addrs parsed)
