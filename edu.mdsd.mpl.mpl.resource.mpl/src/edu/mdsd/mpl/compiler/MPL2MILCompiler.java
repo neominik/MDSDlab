@@ -26,7 +26,9 @@ import static edu.mdsd.mil.util.MILCreationUtil.createYield;
 import static edu.mdsd.mpl.compiler.StreamUtil.stream;
 import static edu.mdsd.mpl.validation.ConstraintHelper.getParent;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
@@ -72,6 +75,8 @@ import edu.mdsd.mpl.mpl.Variable;
 import edu.mdsd.mpl.mpl.VariableDeclaration;
 import edu.mdsd.mpl.mpl.VariableReference;
 import edu.mdsd.mpl.mpl.While;
+import edu.mdsd.mpl.mpl.resource.mpl.IMplTextPrinter;
+import edu.mdsd.mpl.mpl.resource.mpl.mopp.MplMetaInformation;
 
 public class MPL2MILCompiler {
 	public void compileAndSave(Resource resource) {
@@ -336,9 +341,21 @@ public class MPL2MILCompiler {
 	}
 
 	private Stream<Instruction> compileCondition(Comparison comparison) {
+		String printout = print(comparison);
 		LabelInstruction label = createLabelInstruction("assertion_" + getSeed(comparison));
 		return stream(compile(comparison), createNegInstruction(), createJpcInstruction(label),
-				createErr("Assertion " + getSeed(comparison) + " failed.\n"), stream(label));
+				createErr("Assertion " + printout + " failed.\n"), stream(label));
+	}
+
+	private String print(EObject obj) {
+		OutputStream stream = new ByteArrayOutputStream();
+		IMplTextPrinter printer = new MplMetaInformation().createPrinter(stream, null);
+		try {
+			printer.print(obj);
+		} catch (IOException e) {
+			// ignore
+		}
+		return stream.toString();
 	}
 
 	private Stream<Instruction> unsupported(Object o) {

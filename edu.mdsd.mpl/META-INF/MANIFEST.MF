@@ -8,10 +8,10 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: edu.mdsd.mpl.compiler,
- edu.mdsd.mpl.mpl,
+Export-Package: edu.mdsd.mpl.mpl,
  edu.mdsd.mpl.mpl.impl,
- edu.mdsd.mpl.mpl.util
+ edu.mdsd.mpl.mpl.util,
+ edu.mdsd.mpl.validation
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.validation;visibility:=reexport,
