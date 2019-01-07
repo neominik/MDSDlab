@@ -73,7 +73,7 @@ RULES {
 	ParenExpression ::= "(" operand ")";
 	
 	@Operator(type="primitive", weight="5", superclass="Expression")
-	InputExpression ::= "Input" ("(" lowerBound "," upperBound ")")?;
+	InputExpression ::= "Input" "(" (lowerBound "," upperBound)? ")";
 	
 	Assignment ::= leftHandSide #1 ":=" #1 rightHandSide;
 	
