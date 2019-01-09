@@ -7,8 +7,11 @@
 (def ^:dynamic *errors*)
 (defn error [err & [ret]] (swap! *errors* conj err) ret)
 
-(defn bi-consumer [sym {:keys [pc mem cs] [r l & stack] :stack}]
-  [(State. (inc pc) mem (vec (cons (list sym l r) stack)) cs)])
+(defn bi-consumer [sym {:keys [pc mem cs] [r l & stack] :stack} & [check]]
+  (let [new-state (State. (inc pc) mem (vec (cons (list sym l r) stack))cs)]
+    (when check (check new-state))
+    [new-state]))
+
 (defn lookup [addr frame]
   (if (symbol? addr)
     (or (frame addr) (error {:message "Looking up missing value!" :addr addr :frame frame} 0))
@@ -16,10 +19,17 @@
 
 (defmulti step (fn [inst state] (first inst)))
 
-(defmethod step 'add [_ state] (bi-consumer '+ state))
-(defmethod step 'sub [_ state] (bi-consumer '- state))
-(defmethod step 'mul [_ state] (bi-consumer '* state))
-(defmethod step 'div [_ state] (bi-consumer 'div state))
+(defn overflow? [{cs :cs [expr] :stack :as state}]
+  (when (solver/reachable? (cons (list 'not (list '<= Integer/MIN_VALUE expr Integer/MAX_VALUE)) cs))
+    (error {:message "Over-/underflow" :expr expr :state state})))
+(defn div-by-0? [{cs :cs [[_ _ r :as expr]] :stack :as state}]
+  (when (solver/reachable? (cons (list '= 0 r) cs))
+    (error {:message "Divide by zero" :expr expr :state state})))
+
+(defmethod step 'add [_ state] (bi-consumer '+ state overflow?))
+(defmethod step 'sub [_ state] (bi-consumer '- state overflow?))
+(defmethod step 'mul [_ state] (bi-consumer '* state overflow?))
+(defmethod step 'div [_ state] (bi-consumer 'div state div-by-0?))
 
 (defmethod step 'eq [_ state] (bi-consumer '= state))
 (defmethod step 'neq [_ state] (bi-consumer 'distinct state))
