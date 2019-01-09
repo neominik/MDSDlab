@@ -4,11 +4,14 @@
 
 (defrecord State [^int pc mem stack cs])
 
+(def ^:dynamic *errors*)
+(defn error [err & [ret]] (swap! *errors* conj err) ret)
+
 (defn bi-consumer [sym {:keys [pc mem cs] [r l & stack] :stack}]
   [(State. (inc pc) mem (vec (cons (list sym l r) stack)) cs)])
 (defn lookup [addr frame]
   (if (symbol? addr)
-    (or (frame addr) 0)
+    (or (frame addr) (error {:message "Looking up missing value!" :addr addr :frame frame} 0))
     addr))
 
 (defmulti step (fn [inst state] (first inst)))
@@ -41,7 +44,7 @@
 (defmethod step 'cal [[_ addr] {:keys [pc mem stack cs]}] [(State. addr (vec (cons {:ret (inc pc)} mem)) stack cs)])
 (defmethod step 'ret [_ {:keys [pc stack cs] [frame & mem] :mem}] [(State. (:ret frame) (vec mem) stack cs)])
 (defmethod step 'prt [_ state] [(update state :pc inc)])
-(defmethod step 'err [_ state] []) ; TODO add err stream
+(defmethod step 'err [[_ message] state] (error {:message message :state state} [])) ; TODO include trace
 (defmethod step 'lbl [_ state] [(update state :pc inc)])
 (defmethod step 'inp [[_ lower upper] {:keys [pc mem stack cs]}]
   (let [sym (with-meta (gensym) {:symbolic true})
@@ -59,6 +62,8 @@
       (mapv #(with-meta % {:instruction (prog (:pc %))}) reachable))))
 
 (defn verify [file]
-  (let [program (mil/parse file)
-        states (tree-seq #(not (terminated? program %)) (sym-step program) (State. 0 [{}] [] []))]
-    (vec (take 500 states))))
+  (binding [*errors* (atom [])]
+    (let [program (mil/parse file)
+          states (vec (take 500 (tree-seq #(not (terminated? program %)) (sym-step program) (State. 0 [{}] [] []))))]
+      {:states states
+       :errors @*errors*})))
