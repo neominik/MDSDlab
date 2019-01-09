@@ -31,8 +31,9 @@
 (defmethod step 'neg [_ {:keys [pc mem cs] [op & stack] :stack}]
   [(State. (inc pc) mem (vec (cons (list 'not op) stack)) cs)])
 (defmethod step 'jpc [[_ addr] {:keys [pc mem cs] [op & stack] :stack}]
-  [(State. (inc pc) mem stack [(solver/simplify (cons op cs))])
-   (State. addr mem stack [(solver/simplify (cons (list 'not op) cs))])])
+  (filterv #(solver/reachable? (:cs %))
+           [(State. (inc pc) mem stack [(solver/simplify (cons op cs))])
+            (State. addr mem stack [(solver/simplify (cons (list 'not op) cs))])]))
 (defmethod step 'yld [_ state] [(update state :pc inc)])
 
 (defmethod step 'lod [[_ op] {:keys [pc stack cs] [frame & frames :as mem] :mem}]
@@ -57,9 +58,8 @@
   (fn [{:keys [pc cs] :as state}]
     (let [inst (prog pc)
           children (step inst state)
-          not-terminated (filter #(not (terminated? prog %)) children)
-          reachable (filter #(solver/reachable? (:cs %)) not-terminated)]
-      (mapv #(with-meta % {:instruction (prog (:pc %))}) reachable))))
+          not-terminated (filter #(not (terminated? prog %)) children)]
+      (mapv #(with-meta % {:instruction (prog (:pc %))}) not-terminated))))
 
 (defn verify [file]
   (binding [*errors* (atom [])]
