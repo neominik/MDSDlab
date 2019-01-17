@@ -5,7 +5,7 @@
 (defrecord State [^int pc mem stack cs])
 
 (def ^:dynamic *errors*)
-(defn error [err & [ret]] (swap! *errors* conj err) ret)
+(defn error [err & [ret]] (set! *errors* (conj *errors* err)) ret)
 
 (defn bi-consumer [sym {:keys [pc mem cs] [r l & stack] :stack} & [check]]
   (let [new-state (State. (inc pc) mem (vec (cons (list sym l r) stack))cs)]
@@ -72,8 +72,8 @@
       (mapv #(with-meta % {:instruction (prog (:pc %))}) not-terminated))))
 
 (defn verify [file]
-  (binding [*errors* (atom [])]
+  (binding [*errors* []]
     (let [program (mil/parse file)
           states (vec (take 500 (tree-seq #(not (terminated? program %)) (sym-step program) (State. 0 [{}] [] []))))]
       {:states states
-       :errors @*errors*})))
+       :errors *errors*})))
