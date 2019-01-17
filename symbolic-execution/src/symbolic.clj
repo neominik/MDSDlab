@@ -20,11 +20,11 @@
 (defmulti step (fn [inst state] (first inst)))
 
 (defn overflow? [{cs :cs [expr] :stack :as state}]
-  (when (solver/reachable? (cons (list 'not (list '<= Integer/MIN_VALUE expr Integer/MAX_VALUE)) cs))
-    (error {:message "Over-/underflow" :expr expr :state state})))
+  (when-let [reachable (solver/reachable? (cons (list 'not (list '<= Integer/MIN_VALUE expr Integer/MAX_VALUE)) cs))]
+    (error {:message "Over-/underflow" :expr expr :state state :model reachable})))
 (defn div-by-0? [{cs :cs [[_ _ r :as expr]] :stack :as state}]
-  (when (solver/reachable? (cons (list '= 0 r) cs))
-    (error {:message "Divide by zero" :expr expr :state state})))
+  (when-let [reachable (solver/reachable? (cons (list '= 0 r) cs))]
+    (error {:message "Divide by zero" :expr expr :state state :model reachable})))
 
 (defmethod step 'add [_ state] (bi-consumer '+ state overflow?))
 (defmethod step 'sub [_ state] (bi-consumer '- state overflow?))

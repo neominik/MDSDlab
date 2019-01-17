@@ -15,11 +15,14 @@
 
 (defn call-z3 [constraints sym-decls]
   (let [assertions (map #(list 'assert %) constraints)
-        commands (list '(check-sat))]
+        commands (list '(check-sat) '(get-model))]
     (shell-z3 (str (s/join (concat sym-decls assertions commands))))))
 
+(defn- parse-model [[_ & defines]]
+  (into {} (for [[_ sym _ _ value] defines] [sym value])))
+
 (defn- z3-reachable? [z3-result]
-  (s/starts-with? z3-result "sat"))
+  (when (s/starts-with? z3-result "sat") (-> z3-result (subs 3) edn/read-string parse-model)))
 
 (defn reachable? [[valid :as constraints]]
   (if (boolean? valid)
