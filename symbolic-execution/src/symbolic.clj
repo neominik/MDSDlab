@@ -55,7 +55,7 @@
 (defmethod step 'cal [[_ addr] {:keys [pc mem stack cs]}] [(State. addr (vec (cons {:ret (inc pc)} mem)) stack cs)])
 (defmethod step 'ret [_ {:keys [pc stack cs] [frame & mem] :mem}] [(State. (:ret frame) (vec mem) stack cs)])
 (defmethod step 'prt [_ state] [(update state :pc inc)])
-(defmethod step 'err [[_ message] state] (error {:message message :state state} [])) ; TODO include trace
+(defmethod step 'err [[_ message] state] (error {:message message :state state :model (solver/reachable? (:cs state))} []))
 (defmethod step 'lbl [_ state] [(update state :pc inc)])
 (defmethod step 'inp [[_ lower upper] {:keys [pc mem stack cs]}]
   (let [sym (with-meta (gensym) {:symbolic true})
