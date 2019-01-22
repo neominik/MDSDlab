@@ -9,7 +9,7 @@
 
 (defn- extract-symbols [constraints]
   (set (filter #(:symbolic (meta %)) (flatten constraints))))
-  
+
 (defn- extract-sym-decls [constraints]
   (->> constraints extract-symbols (map #(list 'declare-const % 'Int))))
 
@@ -39,4 +39,4 @@
         code (s/join (concat sym-decls (list command)))
         result-str (shell-z3 code)
         result-code (edn/read-string result-str)]
-    (walk/prewalk #(if (symbols %) (with-meta % {:symbolic true}) %) result-code)))  
+    (walk/prewalk #(if (symbols %) (with-meta % {:symbolic true}) %) result-code)))

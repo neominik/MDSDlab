@@ -20,9 +20,8 @@
          (if (#{'jmp 'jpc 'lbl 'cal} jmp) (with-meta (list jmp (addrs a)) {:label a}) inst))
        prog))
 
-(defn parse [file]
-  (let [path (str "/Users/dominik/eclipse/modeling-latest-released/Runtime/MPLExamples/" file)
-        content (slurp path)
+(defn parse [path]
+  (let [content (slurp path)
         lines (s/split content #"\n")
         parsed (vec (map parse-line lines))
         addrs (concrete-addrs parsed)
