@@ -1,0 +1,9 @@
+{:pom
+ {:group-id "symbolic-execution",
+  :artifact-id "symbolic-execution",
+  :version "1.0.0",
+  :name "symbolic-execution"},
+ :packaging
+ {:jar
+  {:enabled true}}
+ :scm {:enabled true}}
