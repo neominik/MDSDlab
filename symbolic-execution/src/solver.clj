@@ -5,7 +5,7 @@
             [clojure.walk :as walk]))
 
 (defn- shell-z3 [code]
-  (:out (sh "z3" "-smt2" "-in" :in code)))
+  (:out (sh "/usr/local/bin/z3" "-smt2" "-in" :in code)))
 
 (defn- extract-symbols [constraints]
   (set (filter #(:symbolic (meta %)) (flatten constraints))))
