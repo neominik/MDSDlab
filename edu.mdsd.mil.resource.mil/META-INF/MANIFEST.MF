@@ -25,3 +25,8 @@ Export-Package: edu.mdsd.mil.resource.mil,
   edu.mdsd.mil.resource.mil.grammar,
   edu.mdsd.mil.resource.mil.util
 Bundle-Activator: edu.mdsd.mil.resource.mil.mopp.MilPlugin
+Bundle-ClassPath: lib/symbolic.jar,
+ .,
+ lib/clojure-1.10.0.jar,
+ lib/spec.alpha-0.2.176.jar,
+ lib/core.specs.alpha-0.2.44.jar
