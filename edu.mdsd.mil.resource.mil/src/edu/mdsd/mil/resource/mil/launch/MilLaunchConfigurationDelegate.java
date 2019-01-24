@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -73,36 +72,44 @@ public class MilLaunchConfigurationDelegate extends LaunchConfigurationDelegate 
 			URI uri = helper.getURI(configuration);
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uri.toPlatformString(true)));
 			resource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-			
+
 			String file = new URL(uri.toString()).toString();
 			@SuppressWarnings("unchecked")
 			List<Map<Keyword, ?>> errors = Symbolic.verify(file);
-			
-			errors.forEach(createMarkers(resource, out));
+
+			errors.forEach(error -> {
+				createMarker(resource, extractMessage(error), extractLineNumber(error));
+				out.println(error);
+			});
 		} catch (MalformedURLException | CoreException e) {// ignore
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Consumer<Map<Keyword, ?>> createMarkers(IResource resource, PrintStream out) {
-		return error -> {
-			String message = (String) error.get(Clojure.read(":message"));
-			Map<Keyword, ?> state = (Map<Keyword, ?>) error.get(Clojure.read(":state"));
-			int line = (int) state.get(Clojure.read(":pc")) + 1;
-			Map<Keyword, ?> model = new HashMap<>((Map<Keyword, ?>) error.get(Clojure.read(":model")));
-			message = message.replaceAll("\n", "") + " when " + model;
-			
-			try {
-				IMarker m;
-				m = resource.createMarker(IMarker.PROBLEM);
-				m.setAttribute(IMarker.LINE_NUMBER, line);
-				m.setAttribute(IMarker.MESSAGE, message);
-				m.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
-				m.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-			} catch (CoreException e) {// ignore
-			}
-			out.println(error);
-		};
+	private static String extractMessage(Map<Keyword, ?> error) {
+		String message = (String) error.get(Clojure.read(":message"));
+		Map<Keyword, ?> model = new HashMap<>((Map<Keyword, ?>) error.get(Clojure.read(":model")));
+		message = message.replaceAll("\n", "") + " when " + model;
+		return message;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static int extractLineNumber(Map<Keyword, ?> error) {
+		Map<Keyword, ?> state = (Map<Keyword, ?>) error.get(Clojure.read(":state"));
+		int line = (int) state.get(Clojure.read(":pc")) + 1;
+		return line;
+	}
+
+	private static void createMarker(IResource resource, String message, int line) {
+		try {
+			IMarker m;
+			m = resource.createMarker(IMarker.PROBLEM);
+			m.setAttribute(IMarker.LINE_NUMBER, line);
+			m.setAttribute(IMarker.MESSAGE, message);
+			m.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
+			m.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+		} catch (CoreException e) {// ignore
+		}
 	}
 
 	private static IOConsole findConsole(String name) {
