@@ -9,7 +9,7 @@
 
 (defn bi-consumer [sym {:keys [pc mem cs] [r l & stack] :stack} & [check]]
   (let [new-state (State. (inc pc) mem (vec (cons (list sym l r) stack))cs)]
-    (when check (check new-state))
+    (when check (check (update new-state :pc dec)))
     [new-state]))
 
 (defn lookup [addr frame]
