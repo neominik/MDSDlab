@@ -74,6 +74,6 @@
 (defn verify [file]
   (binding [*errors* []]
     (let [program (mil/parse file)
-          states (vec (take 500 (tree-seq #(not (terminated? program %)) (sym-step program) (State. 0 [{}] [] []))))]
+          states (vec (take 1000 (tree-seq #(not (terminated? program %)) (sym-step program) (State. 0 [{}] [] []))))]
       {:states states
        :errors *errors*})))
