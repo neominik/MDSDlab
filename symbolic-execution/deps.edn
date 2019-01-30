@@ -11,4 +11,4 @@
                     org.openjfx/javafx-graphics {:local/root "/Users/dominik/bin/javafx-sdk-11.0.1/lib/javafx.graphics.jar"}
                     org.openjfx/javafx-web {:local/root "/Users/dominik/bin/javafx-sdk-11.0.1/lib/javafx.web.jar"}}
        :jvm-opts ["--module-path" "/Users/dominik/bin/javafx-sdk-11.0.1/lib" "--add-modules=javafx.web,javafx.fxml,javafx.swing,javafx.base,javafx.media,javafx.graphics,javafx.controls"]
-       :main-opts ["-m" "user"]}}}
+       :main-opts ["-m" "ui"]}}}
