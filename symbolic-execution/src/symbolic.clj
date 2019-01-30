@@ -7,8 +7,8 @@
 (def ^:dynamic *errors*)
 (defn error [err & [ret]] (set! *errors* (conj *errors* err)) ret)
 
-(defn bi-consumer [sym {:keys [pc mem cs] [r l & stack] :stack} & [check]]
-  (let [new-state (State. (inc pc) mem (vec (cons (list sym l r) stack))cs)]
+(defn bi-function [sym {:keys [pc mem cs] [r l & stack] :stack} & [check]]
+  (let [new-state (State. (inc pc) mem (vec (cons (list sym l r) stack)) cs)]
     (when check (check (update new-state :pc dec)))
     [new-state]))
 
@@ -17,8 +17,6 @@
     (or (frame addr) (error {:message "Looking up missing value!" :addr addr :frame frame} 0))
     addr))
 
-(defmulti step (fn [inst state] (first inst)))
-
 (defn overflow? [{cs :cs [expr] :stack :as state}]
   (when-let [reachable (solver/reachable? (cons (list 'not (list '<= Integer/MIN_VALUE expr Integer/MAX_VALUE)) cs))]
     (error {:message "Over-/underflow" :expr expr :state state :model reachable})))
@@ -26,17 +24,19 @@
   (when-let [reachable (solver/reachable? (cons (list '= 0 r) cs))]
     (error {:message "Divide by zero" :expr expr :state state :model reachable})))
 
-(defmethod step 'add [_ state] (bi-consumer '+ state overflow?))
-(defmethod step 'sub [_ state] (bi-consumer '- state overflow?))
-(defmethod step 'mul [_ state] (bi-consumer '* state overflow?))
-(defmethod step 'div [_ state] (bi-consumer 'div state div-by-0?))
+(defmulti step (fn [inst state] (first inst)))
 
-(defmethod step 'eq [_ state] (bi-consumer '= state))
-(defmethod step 'neq [_ state] (bi-consumer 'distinct state))
-(defmethod step 'lt [_ state] (bi-consumer '< state))
-(defmethod step 'leq [_ state] (bi-consumer '<= state))
-(defmethod step 'gt [_ state] (bi-consumer '> state))
-(defmethod step 'geq [_ state] (bi-consumer '>= state))
+(defmethod step 'add [_ state] (bi-function '+ state overflow?))
+(defmethod step 'sub [_ state] (bi-function '- state overflow?))
+(defmethod step 'mul [_ state] (bi-function '* state overflow?))
+(defmethod step 'div [_ state] (bi-function 'div state div-by-0?))
+
+(defmethod step 'eq [_ state] (bi-function '= state))
+(defmethod step 'neq [_ state] (bi-function 'distinct state))
+(defmethod step 'lt [_ state] (bi-function '< state))
+(defmethod step 'leq [_ state] (bi-function '<= state))
+(defmethod step 'gt [_ state] (bi-function '> state))
+(defmethod step 'geq [_ state] (bi-function '>= state))
 
 (defmethod step 'neg [_ {:keys [pc mem cs] [op & stack] :stack}]
   [(State. (inc pc) mem (vec (cons (list 'not op) stack)) cs)])
@@ -58,7 +58,7 @@
 (defmethod step 'err [[_ message] state] (error {:message message :state state :model (solver/reachable? (:cs state))} []))
 (defmethod step 'lbl [_ state] [(update state :pc inc)])
 (defmethod step 'inp [[_ lower upper] {:keys [pc mem stack cs]}]
-  (let [sym (with-meta (gensym) {:symbolic true})
+  (let [sym (with-meta (symbol (str "in_" (inc pc))) {:symbolic true})
         new-cs [(list '<= (or lower Integer/MIN_VALUE) sym (or upper Integer/MAX_VALUE))]]
     [(State. (inc pc) mem (vec (cons sym stack)) [(solver/simplify (concat new-cs cs))])]))
 

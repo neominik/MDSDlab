@@ -11,13 +11,13 @@
 (def parse-line (comp edn/read-string wrap-line))
 
 (defn concrete-addrs [prog]
-  (let [reduce-fn (fn [a k [inst lbl]]
-                    (if (= inst 'lbl) (assoc a lbl k) a))]
+  (let [reduce-fn (fn [acc addr [inst lbl]]
+                    (if (= inst 'lbl) (assoc acc lbl addr) acc))]
     (reduce-kv reduce-fn {} prog)))
 
 (defn concrete-jumps [prog addrs]
-  (map (fn [[jmp a :as inst]]
-         (if (#{'jmp 'jpc 'lbl 'cal} jmp) (with-meta (list jmp (addrs a)) {:label a}) inst))
+  (map (fn [[jmp label :as inst]]
+         (if (#{'jmp 'jpc 'lbl 'cal} jmp) (with-meta (list jmp (addrs label)) {:label label}) inst))
        prog))
 
 (defn parse [path]
